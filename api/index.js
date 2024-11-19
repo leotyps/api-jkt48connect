@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
 
 // Mengimpor endpoint lainnya
 const events = require("./events");
+const theater = require("./theater");
 const otherEndpoint = require("./other-endpoint");
 
 // Middleware untuk parsing JSON
@@ -12,6 +13,7 @@ app.use(express.json());
 
 // Menggunakan endpoint yang diimpor
 app.use("/api/events", events);
+app.use("/api/theater", theater);
 app.use("/", otherEndpoint);
 
 // Menjalankan server
