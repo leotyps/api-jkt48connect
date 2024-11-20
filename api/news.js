@@ -1,10 +1,11 @@
 const express = require("express");
 const axios = require("axios");
+const validateApiKey = require("../middleware/auth");
 
 const router = express.Router();
 
 // Endpoint untuk mengambil data berita
-router.get("/", async (req, res) => {
+router.get("/", validateApiKey, async (req, res) => {
   try {
     // Meminta data dari API berita
     const response = await axios.get("https://api.crstlnz.my.id/api/news");
@@ -12,7 +13,6 @@ router.get("/", async (req, res) => {
 
     // Mengembalikan data dalam bentuk JSON
     res.json({
-     
       author: "Valzyy",
       newsData,
     });
