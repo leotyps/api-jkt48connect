@@ -15,9 +15,8 @@ router.get("/", validateApiKey, async (req, res) => {
 
     // Mengembalikan data dalam bentuk JSON
     res.json({
-      success: true,
       author: "Valzyy",
-      data: liveData,
+      ...liveData,
     });
   } catch (error) {
     console.error(`Error fetching live data for group ${group}:`, error.message);
