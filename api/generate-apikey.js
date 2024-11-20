@@ -5,10 +5,12 @@ const path = require("path");
 const axios = require("axios");
 const simpleGit = require("simple-git");
 
-const GITHUB_TOKEN = "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";  // Ganti dengan token GitHub Anda
+//const GITHUB_TOKEN = "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";  // Ganti dengan token GitHub Anda
+const GITHUB_TOKEN = "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"; // Ganti dengan token GitHub Anda
 const REPO_OWNER = "Apalahdek";  // Ganti dengan nama pengguna GitHub Anda
 const REPO_NAME = "api-jkt48connect";  // Ganti dengan nama repositori Anda
-const FILE_PATH = path.resolve(__dirname, "../apiKeys.js");  // Pastikan path ini sesuai dengan folder Anda
+const FILE_PATH = "apiKeys.js"; // Path file yang ingin dimodifikasi
+const COMMIT_MESSAGE = "Automated commit to add new API key"; // Pesan commit
 
 // Fungsi untuk membuat API key baru
 function generateApiKey() {
@@ -24,9 +26,8 @@ function generateApiKey() {
   return apiKey;
 }
 
-// Fungsi untuk menambahkan API key ke dalam apiKeys.js
-function addApiKeyToFile(apiKey, expiryDate) {
-  const apiKeysFilePath = path.resolve(__dirname, FILE_PATH);
+// Fungsi untuk mengupdate file apiKeys.js di GitHub
+async function updateFileOnGitHub(apiKey, expiryDate) {
   const apiKeysTemplate = `
 const parseCustomDate = require("./helpers/dateParser");
 
@@ -37,23 +38,37 @@ const apiKeys = {
 module.exports = apiKeys;
 `;
 
-  // Menulis ulang file apiKeys.js dengan API key baru
-  fs.writeFileSync(apiKeysFilePath, apiKeysTemplate, "utf8");
+  // Ambil sha (hash) file apiKeys.js saat ini dari GitHub
+  const getFileSha = await axios.get(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+    headers: {
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+    },
+  });
+
+  const sha = getFileSha.data.sha;  // Ambil sha dari file
+
+  // Kirim permintaan untuk mengupdate file dengan SHA file
+  const response = await axios.put(
+    `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`,
+    {
+      message: COMMIT_MESSAGE,
+      content: Buffer.from(apiKeysTemplate).toString("base64"),
+      sha: sha,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+      },
+    }
+  );
+
+  return response.data;
 }
 
-// Fungsi untuk melakukan commit dan push perubahan ke GitHub
-async function commitAndPushChanges() {
-  const git = simpleGit();
+// Endpoint untuk membuat API key baru dan update file di GitHub
+const express = require("express");
+const router = express.Router();
 
-  // Commit perubahan di file
-  await git.add(FILE_PATH);
-  await git.commit("Automated commit to add new API key");
-
-  // Push perubahan ke repository GitHub
-  await git.push("origin", "main");  // Sesuaikan dengan branch yang Anda gunakan
-}
-
-// Endpoint untuk membuat API key baru
 router.get("/generate-apikey", async (req, res) => {
   try {
     const currentDate = new Date();
@@ -62,21 +77,18 @@ router.get("/generate-apikey", async (req, res) => {
 
     const newApiKey = generateApiKey();
 
-    // Menambahkan API key yang baru ke dalam apiKeys.js
-    addApiKeyToFile(newApiKey, expiryDate.toISOString());
+    // Update file apiKeys.js di GitHub
+    const result = await updateFileOnGitHub(newApiKey, expiryDate.toISOString());
 
-    // Push perubahan ke GitHub
-    await commitAndPushChanges();
-
-    // Mengembalikan response yang berisi API key dan masa aktifnya
     res.status(200).json({
       success: true,
       message: "API key berhasil dibuat dan perubahan telah di-push ke GitHub.",
       apiKey: newApiKey,
       expiryDate: expiryDate.toLocaleString(), // Format tanggal dalam format lokal
+      result,
     });
   } catch (error) {
-    console.error("Error during API key generation and GitHub push:", error);
+    console.error("Error during API key generation and GitHub update:", error);
     res.status(500).json({
       success: false,
       message: "Terjadi kesalahan saat mengenerate API key dan push perubahan ke GitHub.",
