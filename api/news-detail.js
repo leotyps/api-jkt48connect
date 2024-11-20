@@ -1,10 +1,11 @@
 const express = require("express");
 const axios = require("axios");
+const validateApiKey = require("../middleware/auth"); // Import middleware untuk validasi API key
 
 const router = express.Router();
 
 // Endpoint untuk mengambil data berita berdasarkan ID
-router.get("/:id", async (req, res) => {
+router.get("/:id", validateApiKey, async (req, res) => {
   const { id } = req.params; // Mendapatkan ID dari parameter URL
 
   try {
@@ -15,7 +16,7 @@ router.get("/:id", async (req, res) => {
     // Mengembalikan data dalam bentuk JSON
     res.json({
       success: true,
-      author: `Valzyy`,
+      author: "Valzyy",
       data: newsDetail,
     });
   } catch (error) {
