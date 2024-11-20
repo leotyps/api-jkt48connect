@@ -10,6 +10,10 @@
     {
       "src": "/(.*)",
       "dest": "/api/index.js"
+    },
+    {
+      "src": "/check-apikey",
+      "dest": "/api/check-apikey.js"
     }
   ]
 }
