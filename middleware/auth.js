@@ -6,7 +6,8 @@ function validateApiKey(req, res, next) {
   if (!apiKey) {
     return res.status(401).json({
       success: false,
-      message: "API key tidak ditemukan. Harap sertakan API key di header atau query parameter.",
+      message:
+        "API key tidak ditemukan. Harap sertakan API key di header atau query parameter. Jika Anda belum memiliki API key, silakan hubungi nomor 6285701479245 untuk membelinya.",
     });
   }
 
@@ -15,7 +16,8 @@ function validateApiKey(req, res, next) {
   if (!expiryDate) {
     return res.status(403).json({
       success: false,
-      message: "API key tidak valid.",
+      message:
+        "API key tidak valid. Harap pastikan Anda memiliki API key yang valid. Jika belum, silakan hubungi nomor 6285701479245 untuk membeli API key.",
     });
   }
 
@@ -24,7 +26,8 @@ function validateApiKey(req, res, next) {
   if (now > expiryDate) {
     return res.status(403).json({
       success: false,
-      message: "API key sudah kedaluwarsa.",
+      message:
+        "API key sudah kedaluwarsa. Silakan perpanjang masa berlaku API key Anda dengan menghubungi nomor 6285701479245.",
     });
   }
 
