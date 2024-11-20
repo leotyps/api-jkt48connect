@@ -14,7 +14,7 @@ router.get("/", validateApiKey, async (req, res) => {
     // Mengembalikan data dalam bentuk JSON
     res.json({
       author: "Valzyy",
-      newsData,
+      ...newsData,
     });
   } catch (error) {
     console.error("Error fetching news data:", error.message);
