@@ -1,10 +1,11 @@
 const express = require("express");
 const axios = require("axios");
+const validateApiKey = require("../middleware/auth"); // Import middleware untuk validasi API key
 
 const router = express.Router();
 
 // Endpoint untuk mengambil data theater
-router.get("/", async (req, res) => {
+router.get("/", validateApiKey, async (req, res) => {
   try {
     // Meminta data dari API theater
     const response = await axios.get("https://api.crstlnz.my.id/api/theater");
