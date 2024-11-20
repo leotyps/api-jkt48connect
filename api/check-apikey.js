@@ -1,9 +1,10 @@
 const express = require("express");
+const apiKeys = require("../apiKeys"); // Import apiKeys dari file apiKeys.js
+
 const router = express.Router();
-const apiKeys = require("../apiKeys"); // Import file apiKeys yang sudah diubah
 
 // Endpoint untuk memeriksa API key
-router.get("/:api_key", (req, res) => {
+router.get("/check-apikey/:api_key", (req, res) => {
   const { api_key } = req.params; // Ambil API key dari path parameter
 
   if (!api_key) {
