@@ -12,9 +12,9 @@ router.get("/", async (req, res) => {
 
     // Mengembalikan data dalam bentuk JSON
     res.json({
-      success: true,
+     
       author: "Valzyy",
-      data: newsData,
+      newsData,
     });
   } catch (error) {
     console.error("Error fetching news data:", error.message);
