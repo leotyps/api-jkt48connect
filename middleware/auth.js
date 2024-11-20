@@ -1,4 +1,4 @@
-const apiKeys = require("../apiKeys.json");
+const apiKeys = require("../apiKeys");
 
 function validateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"] || req.query.api_key; // Periksa header atau query
