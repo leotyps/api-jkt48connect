@@ -11,6 +11,7 @@ const theaterDetail = require("./theater-detail");
 const memberDetail = require("./member-detail");
 const newsDetail = require("./news-detail");
 const otherEndpoint = require("./other-endpoint");
+const nowlive = require("./now-live");
 
 // Middleware untuk parsing JSON
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use("/api/news/", newsDetail);
 app.use("/api/theater", theater);
 app.use("/api/theater/", theaterDetail);
 app.use("/api/member/", memberDetail);
+app.use("/api/live", nowlive);
 app.use("/", otherEndpoint);
 
 // Menjalankan server
