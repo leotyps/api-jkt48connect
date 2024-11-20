@@ -1,10 +1,11 @@
 const express = require("express");
 const axios = require("axios");
+const validateApiKey = require("../middleware/auth"); // Import middleware untuk validasi API key
 
 const router = express.Router();
 
 // Endpoint untuk mengambil data member berdasarkan nama
-router.get("/:name", async (req, res) => {
+router.get("/:name", validateApiKey, async (req, res) => {
   const { name } = req.params; // Mendapatkan nama dari parameter URL
 
   try {
@@ -15,7 +16,7 @@ router.get("/:name", async (req, res) => {
     // Mengembalikan data dalam bentuk JSON
     res.json({
       success: true,
-      author: `Valzyy`,
+      author: "Valzyy",
       data: memberData,
     });
   } catch (error) {
