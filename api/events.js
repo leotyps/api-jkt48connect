@@ -9,6 +9,7 @@ router.get("/", async (req, res) => {
     const response = await axios.get("https://api.crstlnz.my.id/api/event");
     res.json({
       success: true,
+      author: "Valzyy",
       data: response.data,
     });
   } catch (error) {
