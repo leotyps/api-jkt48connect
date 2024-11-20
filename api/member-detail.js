@@ -15,9 +15,8 @@ router.get("/:name", validateApiKey, async (req, res) => {
 
     // Mengembalikan data dalam bentuk JSON
     res.json({
-      success: true,
       author: "Valzyy",
-      data: memberData,
+      ...memberData,
     });
   } catch (error) {
     console.error(`Error fetching member detail with name ${name}:`, error.message);
