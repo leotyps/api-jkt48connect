@@ -1,10 +1,11 @@
 const express = require("express");
 const axios = require("axios");
+const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
 
 const router = express.Router();
 
 // Endpoint untuk mengambil data live saat ini untuk grup tertentu
-router.get("/", async (req, res) => {
+router.get("/", validateApiKey, async (req, res) => {
   const group = req.query.group || "jkt48"; // Grup default adalah "jkt48"
 
   try {
@@ -15,7 +16,7 @@ router.get("/", async (req, res) => {
     // Mengembalikan data dalam bentuk JSON
     res.json({
       success: true,
-      author: `Valzyy`,
+      author: "Valzyy",
       data: liveData,
     });
   } catch (error) {
