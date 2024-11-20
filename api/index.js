@@ -12,6 +12,8 @@ const memberDetail = require("./member-detail");
 const newsDetail = require("./news-detail");
 const otherEndpoint = require("./other-endpoint");
 const nowlive = require("./now-live");
+const checkHtml = require("../index.html");
+const checkApikey = require("./check-apikey");
 
 // Middleware untuk parsing JSON
 app.use(express.json());
@@ -25,6 +27,8 @@ app.use("/api/theater/", theaterDetail);
 app.use("/api/member/", memberDetail);
 app.use("/api/live", nowlive);
 app.use("/", otherEndpoint);
+app.use("/check", checkHtml);
+app.use("/checkApikey", checkApikey);
 
 // Menjalankan server
 app.listen(PORT, () => {
