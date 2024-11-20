@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", (req, res) => {
   res.json({
     success: true,
-    message: "Selamat datang di API JKT48Connect! Ini adalah endpoint untuk website live.valzyofc.my.id.",
+    message: "Selamat datang di API JKT48Connect! Ini adalah source api untuk website www.jkt48connect.my.id",
     owner: "Valzy",
     developer: "Valzyy",
     social_media: {
