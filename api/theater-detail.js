@@ -15,9 +15,8 @@ router.get("/:id", validateApiKey, async (req, res) => {
 
     // Mengembalikan data dalam bentuk JSON
     res.json({
-      success: true,
       author: "Valzyy",
-      data: theaterDetail,
+      ...theaterDetail,
     });
   } catch (error) {
     console.error(`Error fetching theater detail with ID ${id}:`, error.message);
