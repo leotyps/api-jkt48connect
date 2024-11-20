@@ -26,7 +26,7 @@ app.use("/api/theater/", theaterDetail);
 app.use("/api/member/", memberDetail);
 app.use("/api/live", nowlive);
 app.use("/", otherEndpoint);
-app.use("/checkApikey", checkApikey);
+app.use("/check-apikey", checkApikey);
 
 // Menjalankan server
 app.listen(PORT, () => {
