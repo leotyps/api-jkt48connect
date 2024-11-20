@@ -8,7 +8,7 @@ const simpleGit = require("simple-git");
 const GITHUB_TOKEN = "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";  // Ganti dengan token GitHub Anda
 const REPO_OWNER = "Apalahdek";  // Ganti dengan nama pengguna GitHub Anda
 const REPO_NAME = "api-jkt48connect";  // Ganti dengan nama repositori Anda
-const FILE_PATH = "apiKeys.js";  // Path file yang ingin dimodifikasi
+const FILE_PATH = "../apiKeys.js";  // Path file yang ingin dimodifikasi
 
 // Fungsi untuk membuat API key baru
 function generateApiKey() {
