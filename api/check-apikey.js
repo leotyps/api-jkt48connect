@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const apiKeys = require("../apiKeys"); // File yang berisi daftar API key dan tanggal kedaluwarsa
+const apiKeys = require("../apiKeys"); // Import file apiKeys yang sudah diubah
 
 // Endpoint untuk memeriksa API key
-router.post("/check-apikey", (req, res) => {
-  const { api_key } = req.body; // Ambil API key dari body request
+router.get("/:api_key", (req, res) => {
+  const { api_key } = req.params; // Ambil API key dari path parameter
 
   if (!api_key) {
     return res.status(400).json({
@@ -24,7 +24,7 @@ router.post("/check-apikey", (req, res) => {
 
   const now = new Date();
 
-  if (now > expiryDate) {
+  if (now > new Date(expiryDate)) {
     return res.status(403).json({
       success: false,
       message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
@@ -35,7 +35,7 @@ router.post("/check-apikey", (req, res) => {
   res.status(200).json({
     success: true,
     message: "API key valid.",
-    expiry_date: expiryDate.toISOString(), // Tanggal kedaluwarsa dalam format ISO
+    expiry_date: expiryDate, // Menampilkan tanggal dalam format yang telah diformat
   });
 });
 
