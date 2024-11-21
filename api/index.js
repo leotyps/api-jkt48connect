@@ -13,6 +13,7 @@ const newsDetail = require("./news-detail");
 const otherEndpoint = require("./other-endpoint");
 const nowlive = require("./now-live");
 const checkApikey = require("./check-apikey");
+const checkLimit = require("./check-limit");
 
 // Middleware untuk parsing JSON
 app.use(express.json());
@@ -27,6 +28,7 @@ app.use("/api/member/", memberDetail);
 app.use("/api/live", nowlive);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
+app.use("/api", checkLimit);
 
 // Menjalankan server
 app.listen(PORT, () => {
