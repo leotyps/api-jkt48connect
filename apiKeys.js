@@ -2,7 +2,7 @@ const parseCustomDate = require("./helpers/dateParser");
 
 const apiKeys = {
   ADELINE: {
-    expiryDate: parseCustomDate("-"), // Tanggal kedaluwarsa API key
+    expiryDate: parseCustomDate("unli"), // Tanggal kedaluwarsa API key
     remainingRequests: 100, // Jumlah request tersisa untuk hari ini
     maxRequests: 100, // Limit maksimum per hari
     lastAccessDate: "2024-11-20", // Tanggal terakhir akses (format: YYYY-MM-DD)
