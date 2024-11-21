@@ -22,7 +22,7 @@ function validateApiKey(req, res, next) {
   const now = new Date();
   const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
-  // Periksa apakah API key sudah kedaluwarsa
+  // Periksa apakah API key sudah kedaluwarsa, kecuali jika expiryDate = "-"
   if (keyData.expiryDate !== "-" && now > keyData.expiryDate) {
     return res.status(403).json({
       success: false,
@@ -32,7 +32,7 @@ function validateApiKey(req, res, next) {
 
   // Reset limit request jika hari terakhir berbeda dari hari ini
   if (keyData.lastAccessDate !== today) {
-    keyData.remainingRequests = keyData.maxRequests === "-" ? "∞" : keyData.maxRequests; // Reset ke limit maksimum
+    keyData.remainingRequests = keyData.maxRequests === "-" ? "∞" : keyData.maxRequests; // Reset ke limit maksimum jika tidak terbatas
     keyData.lastAccessDate = today; // Update tanggal terakhir akses
   }
 
