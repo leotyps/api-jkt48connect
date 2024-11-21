@@ -17,7 +17,7 @@ function formatDate(date) {
 }
 
 // Endpoint untuk memeriksa API key
-router.get("/:api_key", (req, res) => {
+router.get("/check-apikey/:api_key", (req, res) => {
   const { api_key } = req.params; // Ambil API key dari path parameter
 
   if (!api_key) {
