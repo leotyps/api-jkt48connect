@@ -13,7 +13,7 @@ const apiKeys = {
     maxRequests: 10,
     lastAccessDate: "2024-11-20",
   },
-  "67890-FGHIJ": {
+  "ForxFyyre": {
     expiryDate: parseCustomDate("21/11/2024/18:15"),
     remainingRequests: 1024,
     maxRequests: 1024,
