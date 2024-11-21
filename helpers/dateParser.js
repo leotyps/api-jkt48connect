@@ -1,6 +1,10 @@
 function parseCustomDate(dateString) {
- 
-  // Contoh format input: "20/11/2024/14:30"
+  // Jika tanggal adalah 'unli' atau '-'
+  if (dateString === "unli" || dateString === "-") {
+    return dateString; // Kembalikan string "unli" atau "-" untuk menandakan tidak terbatas
+  }
+
+  // Jika formatnya adalah tanggal dan waktu
   const [day, month, year, time] = dateString.split("/");
   const [hour, minute] = time.split(":");
 
