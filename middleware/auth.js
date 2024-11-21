@@ -22,8 +22,8 @@ function validateApiKey(req, res, next) {
   const now = new Date();
   const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
-  // Periksa apakah API key sudah kedaluwarsa, kecuali jika expiryDate = "-"
-  if (keyData.expiryDate !== "-" && now > keyData.expiryDate) {
+  // Periksa apakah expiryDate = "unli", yang berarti tidak terbatas
+  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > keyData.expiryDate) {
     return res.status(403).json({
       success: false,
       message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
