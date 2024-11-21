@@ -12,7 +12,7 @@ const memberDetail = require("./member-detail");
 const newsDetail = require("./news-detail");
 const otherEndpoint = require("./other-endpoint");
 const nowlive = require("./now-live");
-const checkApikey = require("./check-apikey");
+const checkApikey = require("./checkApikey");
 const checkLimit = require("./check-limit");
 
 // Middleware untuk parsing JSON
