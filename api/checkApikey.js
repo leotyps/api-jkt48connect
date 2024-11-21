@@ -4,7 +4,7 @@ const apiKeys = require("../apiKeys"); // File yang berisi daftar API key, tangg
 
 // Fungsi untuk format tanggal seperti "Sabtu 12 Agustus 2024 jam 12:00"
 function formatDate(date) {
-  if (date === "-") return "∞"; // Jika tanggal tidak terbatas, kembalikan simbol ∞
+  if (date === "-" || date === "unli") return "∞"; // Jika tanggal tidak terbatas, kembalikan simbol ∞
   const options = {
     weekday: "long",
     year: "numeric",
@@ -47,7 +47,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
   const today = getTodayDate();
 
   // Periksa apakah API key sudah kedaluwarsa
-  if (keyData.expiryDate !== "-" && now > keyData.expiryDate) {
+  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > keyData.expiryDate) {
     return res.status(403).json({
       success: false,
       message: `API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.`,
@@ -56,16 +56,23 @@ router.get("/check-apikey/:api_key", (req, res) => {
 
   // Reset limit request jika hari terakhir berbeda dari hari ini
   if (keyData.lastAccessDate !== today) {
-    keyData.remainingRequests = keyData.maxRequests; // Reset ke limit maksimum
+    keyData.remainingRequests = keyData.maxRequests === "∞" ? "∞" : keyData.maxRequests; // Reset ke limit maksimum
     keyData.lastAccessDate = today; // Update tanggal terakhir akses
   }
 
   // Periksa limit request
-  if (keyData.remainingRequests === "-") {
-    keyData.remainingRequests = "∞"; // Jika limit tidak terbatas
+  if (keyData.remainingRequests === "∞") {
+    // Jika limit tidak terbatas, lanjutkan tanpa pengurangan request
+    return res.status(200).json({
+      success: true,
+      message: "API key valid.",
+      expiry_date: formatDate(keyData.expiryDate), // Tanggal kedaluwarsa diformat
+      remaining_requests: "∞", // Limit tak terbatas
+      max_requests: "∞", // Limit tak terbatas
+    });
   }
 
-  if (keyData.remainingRequests <= 0 && keyData.remainingRequests !== "∞") {
+  if (keyData.remainingRequests <= 0) {
     return res.status(429).json({
       success: false,
       message: "Batas request API key Anda telah habis untuk hari ini. Silakan tunggu hingga besok atau hubungi WhatsApp 6285701479245.",
