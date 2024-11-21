@@ -28,6 +28,14 @@ function validateApiKey(req, res, next) {
     });
   }
 
+  // Validasi limit request
+  if (typeof keyData.remainingRequests !== "number" || typeof keyData.maxRequests !== "number") {
+    return res.status(500).json({
+      success: false,
+      message: "Konfigurasi API key tidak valid. Hubungi admin untuk bantuan.",
+    });
+  }
+
   if (keyData.remainingRequests <= 0) {
     return res.status(429).json({
       success: false,
