@@ -3,7 +3,7 @@ const router = express.Router();
 const apiKeys = require("../apiKeys");
 
 // Endpoint untuk mengecek sisa limit API key
-router.get("/check-limit/:api_key", (req, res) => {
+router.get("/:api_key", (req, res) => {
   const { api_key } = req.params;
   const keyData = apiKeys[api_key];
 
