@@ -53,9 +53,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
     });
   }
 
-  // Kurangi limit request sebanyak 1
-  keyData.remainingRequests -= 1;
-
+  
   // Jika API key valid, belum kedaluwarsa, dan limit masih tersedia
   res.status(200).json({
     success: true,
