@@ -28,7 +28,7 @@ app.use("/api/member/", memberDetail);
 app.use("/api/live", nowlive);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
-app.use("/api", checkLimit);
+app.use("/api/", checkLimit);
 
 // Menjalankan server
 app.listen(PORT, () => {
