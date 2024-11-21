@@ -4,6 +4,7 @@ const apiKeys = require("../apiKeys"); // File yang berisi daftar API key, tangg
 
 // Fungsi untuk format tanggal seperti "Sabtu 12 Agustus 2024 jam 12:00"
 function formatDate(date) {
+  if (date === "-") return "∞"; // Jika tanggal tidak terbatas, kembalikan simbol ∞
   const options = {
     weekday: "long",
     year: "numeric",
@@ -11,6 +12,7 @@ function formatDate(date) {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: true,
   };
   return new Intl.DateTimeFormat("id-ID", options).format(date);
 }
@@ -45,7 +47,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
   const today = getTodayDate();
 
   // Periksa apakah API key sudah kedaluwarsa
-  if (now > keyData.expiryDate) {
+  if (keyData.expiryDate !== "-" && now > keyData.expiryDate) {
     return res.status(403).json({
       success: false,
       message: `API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.`,
@@ -59,7 +61,11 @@ router.get("/check-apikey/:api_key", (req, res) => {
   }
 
   // Periksa limit request
-  if (keyData.remainingRequests <= 0) {
+  if (keyData.remainingRequests === "-") {
+    keyData.remainingRequests = "∞"; // Jika limit tidak terbatas
+  }
+
+  if (keyData.remainingRequests <= 0 && keyData.remainingRequests !== "∞") {
     return res.status(429).json({
       success: false,
       message: "Batas request API key Anda telah habis untuk hari ini. Silakan tunggu hingga besok atau hubungi WhatsApp 6285701479245.",
@@ -72,7 +78,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
     message: "API key valid.",
     expiry_date: formatDate(keyData.expiryDate), // Tanggal kedaluwarsa diformat
     remaining_requests: keyData.remainingRequests, // Sisa request
-    max_requests: keyData.maxRequests, // Limit maksimum
+    max_requests: keyData.maxRequests === "-" ? "∞" : keyData.maxRequests, // Limit maksimum
   });
 });
 
