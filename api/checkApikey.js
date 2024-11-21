@@ -5,14 +5,20 @@ const apiKeys = require("../apiKeys"); // File yang berisi daftar API key, tangg
 // Fungsi untuk format tanggal seperti "Sabtu 12 Agustus 2024 jam 12:00"
 function formatDate(date) {
   const options = {
-    weekday: "long", // Nama hari (contoh: Sabtu)
-    year: "numeric", // Tahun (contoh: 2024)
-    month: "long", // Nama bulan (contoh: Agustus)
-    day: "numeric", // Tanggal (contoh: 12)
-    hour: "2-digit", // Jam (contoh: 12)
-    minute: "2-digit", // Menit (contoh: 00)
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   };
-  return new Intl.DateTimeFormat("id-ID", options).format(date); // Format menggunakan locale Indonesia
+  return new Intl.DateTimeFormat("id-ID", options).format(date);
+}
+
+// Fungsi untuk mendapatkan tanggal hari ini (tanpa waktu)
+function getTodayDate() {
+  const now = new Date();
+  return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 }
 
 // Endpoint untuk memeriksa API key
@@ -36,6 +42,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
   }
 
   const now = new Date();
+  const today = getTodayDate();
 
   // Periksa apakah API key sudah kedaluwarsa
   if (now > keyData.expiryDate) {
@@ -45,15 +52,20 @@ router.get("/check-apikey/:api_key", (req, res) => {
     });
   }
 
+  // Reset limit request jika hari terakhir berbeda dari hari ini
+  if (keyData.lastAccessDate !== today) {
+    keyData.remainingRequests = keyData.maxRequests; // Reset ke limit maksimum
+    keyData.lastAccessDate = today; // Update tanggal terakhir akses
+  }
+
   // Periksa limit request
   if (keyData.remainingRequests <= 0) {
     return res.status(429).json({
       success: false,
-      message: "Batas request API key Anda telah habis. Silakan perbarui limit di WhatsApp 6285701479245 atau wa.me/6285701479245.",
+      message: "Batas request API key Anda telah habis untuk hari ini. Silakan tunggu hingga besok atau hubungi WhatsApp 6285701479245.",
     });
   }
 
-  
   // Jika API key valid, belum kedaluwarsa, dan limit masih tersedia
   res.status(200).json({
     success: true,
