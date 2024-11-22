@@ -14,6 +14,7 @@ const otherEndpoint = require("./other-endpoint");
 const nowlive = require("./now-live");
 const reLive = require("./recentLive");
 const checkApikey = require("./checkApikey");
+const theaterMember = require("./theater-member");
 
 // Middleware untuk parsing JSON
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use("/api/news", news);
 app.use("/api/news/", newsDetail);
 app.use("/api/theater", theater);
 app.use("/api/theater/", theaterDetail);
+app.use("/api/theater/member/", theaterMember);
 app.use("/api/member/", memberDetail);
 app.use("/api/live", nowlive);
 app.use("/api/recent", reLive);
