@@ -30,11 +30,18 @@ router.get("/", validateApiKey, async (req, res) => {
     // Dapatkan nama dari data yang sekarang live
     const currentLiveNames = currentLiveData.map((live) => live.name);
 
-    // Cari member yang ada di cache tapi sudah hilang dari now_live
+    // Periksa cache untuk mencari member yang hilang
     const missingMembers = liveDataCache.filter((cacheItem) => !currentLiveNames.includes(cacheItem.name));
 
-    // Proses untuk setiap member yang hilang
-    const processedData = await Promise.all(
+    // Update cache dengan data now_live yang baru
+    liveDataCache = currentLiveData.map((live) => ({
+      name: live.name,
+      img: live.img,
+      img_alt: live.img_alt,
+    }));
+
+    // Proses setiap member yang hilang untuk mengambil data last_live
+    const processedMissingMembers = await Promise.all(
       missingMembers.map(async (member) => {
         const lastLiveData = await fetchLastLiveData(member.name);
 
@@ -47,21 +54,14 @@ router.get("/", validateApiKey, async (req, res) => {
       })
     );
 
-    // Perbarui cache dengan data now_live yang baru
-    liveDataCache = currentLiveData.map((live) => ({
-      name: live.name,
-      img: live.img,
-      img_alt: live.img_alt,
-    }));
+    // Gabungkan data yang masih live dan yang hilang
+    const allData = [
+      ...currentLiveData, // Data yang masih live
+      ...processedMissingMembers, // Data yang sudah hilang
+    ];
 
-    // Kembalikan hasil akhir (hanya yang hilang)
-    if (processedData.length > 0) {
-      res.json(processedData);
-    } else {
-      res.json({
-        message: "Semua member saat ini masih live, tidak ada data yang hilang.",
-      });
-    }
+    // Kembalikan hasil akhir
+    res.json(allData);
   } catch (error) {
     console.error("Error fetching or processing live data:", error.message);
 
