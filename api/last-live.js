@@ -7,10 +7,12 @@ const router = express.Router();
 // Variabel untuk menyimpan data agar tidak hilang
 let liveDataCache = [];
 
-// Fungsi untuk mengambil data dari API member
+// Fungsi untuk mengambil data dari API member dengan nama yang diubah ke huruf kecil
 async function fetchLastLiveData(memberName) {
   try {
-    const response = await axios.get(`https://api.crstlnz.my.id/api/member/${memberName}`);
+    // Konversi nama ke huruf kecil
+    const normalizedMemberName = memberName.toLowerCase();
+    const response = await axios.get(`https://api.crstlnz.my.id/api/member/${normalizedMemberName}`);
     const { last_live } = response.data;
     return last_live;
   } catch (error) {
