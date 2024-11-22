@@ -4,14 +4,13 @@ const validateApiKey = require("../middleware/auth"); // Middleware validasi API
 
 const router = express.Router();
 
-// Variabel untuk menyimpan data agar tidak hilang
+// Variabel untuk menyimpan cache data now_live sebelumnya
 let liveDataCache = [];
 
-// Fungsi untuk mengambil data dari API member dengan nama yang diubah ke huruf kecil
+// Fungsi untuk mengambil data last_live dari API member
 async function fetchLastLiveData(memberName) {
   try {
-    // Konversi nama ke huruf kecil
-    const normalizedMemberName = memberName.toLowerCase();
+    const normalizedMemberName = memberName.toLowerCase(); // Konversi nama menjadi huruf kecil
     const response = await axios.get(`https://api.crstlnz.my.id/api/member/${normalizedMemberName}`);
     const { last_live } = response.data;
     return last_live;
@@ -24,46 +23,51 @@ async function fetchLastLiveData(memberName) {
 // Endpoint utama
 router.get("/", validateApiKey, async (req, res) => {
   try {
-    // Ambil data dari API now_live
+    // Ambil data dari API now_live saat ini
     const response = await axios.get("https://api.crstlnz.my.id/api/now_live?group=jkt48");
-    const liveData = response.data;
+    const currentLiveData = response.data;
 
-    // Proses data untuk setiap live yang ditemukan
+    // Dapatkan nama dari data yang sekarang live
+    const currentLiveNames = currentLiveData.map((live) => live.name);
+
+    // Cari member yang ada di cache tapi sudah hilang dari now_live
+    const missingMembers = liveDataCache.filter((cacheItem) => !currentLiveNames.includes(cacheItem.name));
+
+    // Proses untuk setiap member yang hilang
     const processedData = await Promise.all(
-      liveData.map(async (live) => {
-        const { name, img, img_alt } = live;
-
-        // Cek apakah ada di cache atau ambil last_live baru
-        const cachedItem = liveDataCache.find((item) => item.name === name);
-        const lastLiveData = cachedItem?.last_live || (await fetchLastLiveData(name));
-
-        // Simpan ke cache jika belum ada
-        if (!cachedItem && lastLiveData) {
-          liveDataCache.push({ name, img, img_alt, last_live: lastLiveData });
-        }
+      missingMembers.map(async (member) => {
+        const lastLiveData = await fetchLastLiveData(member.name);
 
         return {
-          name,
-          img,
-          img_alt,
-          last_live: lastLiveData || null,
+          name: member.name,
+          img: member.img,
+          img_alt: member.img_alt,
+          last_live: lastLiveData || null, // Tampilkan last_live jika ada, jika tidak null
         };
       })
     );
 
-    // Perbarui cache dengan data yang sudah diproses
-    liveDataCache = liveDataCache.filter((cacheItem) =>
-      processedData.some((data) => data.name === cacheItem.name)
-    );
+    // Perbarui cache dengan data now_live yang baru
+    liveDataCache = currentLiveData.map((live) => ({
+      name: live.name,
+      img: live.img,
+      img_alt: live.img_alt,
+    }));
 
-    // Kembalikan hasil akhir
-    res.json(processedData);
+    // Kembalikan hasil akhir (hanya yang hilang)
+    if (processedData.length > 0) {
+      res.json(processedData);
+    } else {
+      res.json({
+        message: "Semua member saat ini masih live, tidak ada data yang hilang.",
+      });
+    }
   } catch (error) {
     console.error("Error fetching or processing live data:", error.message);
 
     // Mengembalikan error response jika terjadi kesalahan
     res.status(500).json({
-      message: "Gagal mengambil data live dan memproses last live data.",
+      message: "Gagal mengambil data live atau memproses last live data.",
       error: error.message,
     });
   }
