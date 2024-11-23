@@ -24,7 +24,10 @@ router.get("/", validateApiKey, async (req, res) => {
     delete paymentData.creator;
 
     // Mengembalikan data dalam format JSON langsung tanpa author
-    res.json(paymentData);
+    res.json({
+      author: "Valzyy",
+      ...paymentData, // Menyisipkan data pembayaran langsung
+    });
   } catch (error) {
     console.error("Error creating payment:", error.message);
 
