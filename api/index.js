@@ -14,6 +14,7 @@ const otherEndpoint = require("./other-endpoint");
 const nowlive = require("./now-live");
 const reLive = require("./recentLive");
 const checkApikey = require("./checkApikey");
+const createPayment = require("./orkut-createPayment");
 
 // Middleware untuk parsing JSON
 app.use(express.json());
@@ -29,6 +30,7 @@ app.use("/api/live", nowlive);
 app.use("/api/recent", reLive);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
+app.use("/api/orkut/createpayment", createPayment);
 
 // Menjalankan server
 app.listen(PORT, () => {
