@@ -21,7 +21,7 @@ router.get("/", validateApiKey, async (req, res) => {
     const paymentData = response.data;
 
     // Menghapus data 'author' dari respons
-    delete paymentData.author;
+    delete paymentData.creator;
 
     // Mengembalikan data dalam format JSON langsung tanpa author
     res.json(paymentData);
