@@ -12,7 +12,6 @@ const memberDetail = require("./member-detail");
 const newsDetail = require("./news-detail");
 const otherEndpoint = require("./other-endpoint");
 const nowlive = require("./now-live");
-const lastlive = require("./last-live");
 const reLive = require("./recentLive");
 const checkApikey = require("./checkApikey");
 
@@ -27,7 +26,6 @@ app.use("/api/theater", theater);
 app.use("/api/theater/", theaterDetail);
 app.use("/api/member/", memberDetail);
 app.use("/api/live", nowlive);
-app.use("/api/live/last", lastlive);
 app.use("/api/recent", reLive);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
