@@ -15,6 +15,7 @@ const nowlive = require("./now-live");
 const reLive = require("./recentLive");
 const checkApikey = require("./checkApikey");
 const createPayment = require("./orkut-createPayment");
+const orkutStatus = require("../api2/orkut-status");
 
 // Middleware untuk parsing JSON
 app.use(express.json());
@@ -31,6 +32,7 @@ app.use("/api/recent", reLive);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
 app.use("/api/orkut/createpayment", createPayment);
+app.use("/api/orkut/cekstatus", orkutStatus);
 
 // Menjalankan server
 app.listen(PORT, () => {
