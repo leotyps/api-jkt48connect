@@ -1,3 +1,4 @@
+const inject = require("@vercel/analytics")
 const express = require("express");
 
 const app = express();
@@ -38,6 +39,8 @@ app.use("/api", checkApikey);
 app.use("/api/orkut/createpayment", createPayment);
 app.use("/api/orkut/cekstatus", orkutStatus);
 
+ 
+inject();
 // Menjalankan server
 app.listen(PORT, () => {
   console.log(`Server berjalan di http://localhost:${PORT}`);
