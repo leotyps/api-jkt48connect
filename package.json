@@ -16,6 +16,7 @@
     "simple-git": "^3.0.0",
     "path": "^0.12.7",
     "fs": "0.0.1-security",
+    "@vercel/analytics": "^1.4.1",
     "mongoose": "^7.1.0"
   },
   "devDependencies": {
