@@ -1,9 +1,13 @@
 const express = require("express");
 const axios = require("axios");
+const cors = require('cors');
 const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
 
 const router = express.Router();
 
+app.use(cors({
+  origin: '*', // Atau set domain spesifik, misalnya 'https://yourfrontenddomain.com'
+}));
 // Endpoint untuk mengambil data recent berdasarkan grup
 router.get("/", validateApiKey, async (req, res) => {
   const group = req.query.group || "jkt48"; // Grup default adalah "jkt48"
