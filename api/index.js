@@ -1,4 +1,4 @@
-const inject = require("@vercel/analytics")
+import { inject } from '@vercel/analytics';
 const express = require("express");
 
 const app = express();
