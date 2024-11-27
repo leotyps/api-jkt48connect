@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Enable CORS for all domains (or specific domains)
 app.use(cors({
-  origin: '*', 
+  origin: '*', // Atau set domain spesifik, misalnya 'https://yourfrontenddomain.com'
 }));
 
 // Endpoint untuk mengambil data theater berdasarkan ID
