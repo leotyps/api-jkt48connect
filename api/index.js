@@ -19,6 +19,7 @@ const lastLive = require("../api2/jkt48-recent");
 const checkApikey = require("./checkApikey");
 const createPayment = require("./orkut-createPayment");
 const orkutStatus = require("../api2/orkut-status");
+const birthday = require("../api2/birthday");
 
 //Cors
 app.use(cors({
@@ -41,6 +42,7 @@ app.use("/api/recent/", reLive);
 app.use("/api/recent", lastLive);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
+app.use("/api", birthday);
 app.use("/api/orkut/createpayment", createPayment);
 app.use("/api/orkut/cekstatus", orkutStatus);
 
