@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,11 @@ const lastLive = require("../api2/jkt48-recent");
 const checkApikey = require("./checkApikey");
 const createPayment = require("./orkut-createPayment");
 const orkutStatus = require("../api2/orkut-status");
+
+//Cors
+app.use(cors({
+  origin: '*', // Atau set domain spesifik, misalnya 'https://yourfrontenddomain.com'
+}));
 
 // Middleware untuk parsing JSON
 app.use(express.json());
