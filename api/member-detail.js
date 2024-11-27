@@ -2,12 +2,13 @@ const express = require("express");
 const axios = require("axios");
 const cors = require('cors');
 const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
-
+const app = express();
 const router = express.Router();
+
 
 // Enable CORS for all domains (or specific domains)
 app.use(cors({
-  origin: '*', // Atau set domain spesifik, misalnya 'https://yourfrontenddomain.com'
+  origin: '*', 
 }));
 
 
