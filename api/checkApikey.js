@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const cors = require('cors');
+const app = express(); // Inisialisasi express app
 const apiKeys = require("../apiKeys"); // File yang berisi daftar API key, tanggal kedaluwarsa, dan limit request
 
 // Fungsi untuk format tanggal seperti "Sabtu 12 Agustus 2024 jam 12:00"
