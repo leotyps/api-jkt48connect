@@ -28,7 +28,7 @@ app.use("/api/theater", theater);
 app.use("/api/theater/", theaterDetail);
 app.use("/api/member/", memberDetail);
 app.use("/api/live", nowlive);
-app.use("/api/recent", reLive);
+app.use("/api/recent/", reLive);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
 app.use("/api/orkut/createpayment", createPayment);
