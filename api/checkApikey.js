@@ -27,7 +27,7 @@ function getTodayDate() {
 
 // Enable CORS for all domains (or specific domains)
 app.use(cors({
-  origin: '*', 
+  origin: '*', // Atau set domain spesifik, misalnya 'https://yourfrontenddomain.com'
 }));
 // Endpoint untuk memeriksa API key
 router.get("/check-apikey/:api_key", (req, res) => {
