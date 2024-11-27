@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const cors = require('cors');
 const apiKeys = require("../apiKeys"); // File yang berisi daftar API key, tanggal kedaluwarsa, dan limit request
 
 // Fungsi untuk format tanggal seperti "Sabtu 12 Agustus 2024 jam 12:00"
@@ -23,6 +24,11 @@ function getTodayDate() {
   return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 }
 
+
+// Enable CORS for all domains (or specific domains)
+app.use(cors({
+  origin: '*', 
+}));
 // Endpoint untuk memeriksa API key
 router.get("/check-apikey/:api_key", (req, res) => {
   const { api_key } = req.params; // Ambil API key dari path parameter
