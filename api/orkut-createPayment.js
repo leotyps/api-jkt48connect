@@ -14,19 +14,26 @@ app.use(cors({
 router.get("/", validateApiKey, async (req, res) => {
   const { amount, codeqr, logostore } = req.query; // Mendapatkan parameter amount, codeqr, dan logostore dari query URL
 
-  // Pastikan amount, codeqr, dan logostore ada dalam query
-  if (!amount || !codeqr || !logostore) {
+  // Pastikan amount dan codeqr ada dalam query
+  if (!amount || !codeqr) {
     return res.status(400).json({
-      message: "Parameter 'amount', 'codeqr', dan 'logostore' harus disertakan.",
+      message: "Parameter 'amount' dan 'codeqr' harus disertakan.",
     });
   }
 
   try {
+    // Membentuk URL berdasarkan apakah logostore disertakan atau tidak
+    const apiUrl = `https://apiv2.abidev.tech/api/orkut/createpayment?amount=${amount}&codeqr=${codeqr}${
+      logostore ? `&logostore=${encodeURIComponent(logostore)}` : ""
+    }`;
+
     // Meminta data dari API pembayaran
-    const response = await axios.get(`https://apiv2.abidev.tech/api/orkut/createpayment?amount=${amount}&codeqr=${codeqr}&logostore=${logostore}`);
+    const response = await axios.get(apiUrl);
     const paymentData = response.data;
 
-  
+    // Menghapus data 'creator' dari respons
+    delete paymentData.creator;
+
     // Mengembalikan data dalam format JSON langsung tanpa author
     res.json({
       author: "Valzyy",
