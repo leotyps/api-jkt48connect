@@ -1,13 +1,13 @@
 const express = require("express");
 const axios = require("axios");
-const cors = require("cors");
+const cors = require('cors');
 const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
 const app = express();
 const router = express.Router();
 
 // Enable CORS for all domains (or specific domains)
 app.use(cors({
-  origin: '*',
+  origin: '*', 
 }));
 
 // Endpoint untuk membuat pembayaran
@@ -23,20 +23,13 @@ router.get("/", validateApiKey, async (req, res) => {
 
   try {
     // Meminta data dari API pembayaran
-    const response = await axios.get(`https://apiv2.abidev.tech/api/orkut/createpayment`, {
-      params: { 
-        amount, 
-        codeqr, 
-        logostore 
-      },
-    });
-
+    const response = await axios.get(`https://apiv2.abidev.tech/api/orkut/createpayment?amount=${amount}&codeqr=${codeqr}&logostore=${logostore}`);
     const paymentData = response.data;
 
-    // Menghapus data 'creator' dari respons
+    // Menghapus data 'author' dari respons
     delete paymentData.creator;
 
-    // Mengembalikan data dalam format JSON langsung tanpa creator
+    // Mengembalikan data dalam format JSON langsung tanpa author
     res.json({
       author: "Valzyy",
       ...paymentData, // Menyisipkan data pembayaran langsung
