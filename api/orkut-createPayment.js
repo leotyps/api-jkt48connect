@@ -26,9 +26,7 @@ router.get("/", validateApiKey, async (req, res) => {
     const response = await axios.get(`https://apiv2.abidev.tech/api/orkut/createpayment?amount=${amount}&codeqr=${codeqr}&logostore=${logostore}`);
     const paymentData = response.data;
 
-    // Menghapus data 'creator' dari respons
-    delete paymentData.creator;
-
+  
     // Mengembalikan data dalam format JSON langsung tanpa author
     res.json({
       author: "Valzyy",
