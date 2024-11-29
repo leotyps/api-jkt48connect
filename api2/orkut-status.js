@@ -26,10 +26,7 @@ router.get("/", validateApiKey, async (req, res) => {
     const response = await axios.get(`https://apiv2.abidev.tech/api/orkut/cekstatus?merchant=${merchant}&keyorkut=${keyorkut}&amount=${amount}`);
     const statusData = response.data;
 
-    // Menghapus data 'author' dari respons
-    delete statusData.author;
-
-    // Mengembalikan data dalam format JSON langsung tanpa author
+    // Mengembalikan data dalam format JSON langsung
     res.json(statusData);
   } catch (error) {
     console.error("Error checking payment status:", error.message);
