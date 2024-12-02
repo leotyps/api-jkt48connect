@@ -17,7 +17,7 @@ router.get("/", validateApiKey, async (req, res) => {
 
   try {
     // Meminta data dari API recent berdasarkan grup
-    const response = await axios.get(`https://api.crstlnz.my.id/api/recent?group=${group}`);
+    const response = await axios.get(`https://api.crstlnz.my.id/api/recent?group=${group}&type=all`);
     const recentData = response.data;
 
     // Menambahkan author ke dalam respons
