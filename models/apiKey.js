@@ -1,11 +1,14 @@
+// models/apiKey.js
 const mongoose = require("mongoose");
 
 const apiKeySchema = new mongoose.Schema({
   key: { type: String, required: true, unique: true },
-  expiryDate: { type: String, required: true },
-  remainingRequests: { type: mongoose.Schema.Types.Mixed, required: true },
-  maxRequests: { type: mongoose.Schema.Types.Mixed, required: true },
-  lastAccessDate: { type: String, required: true },
+  expiryDate: { type: Date, required: true },
+  remainingRequests: { type: Number, required: true },
+  maxRequests: { type: Number, required: true },
+  lastAccessDate: { type: Date, required: true },
 });
 
-module.exports = mongoose.model("ApiKey", apiKeySchema);
+const ApiKey = mongoose.model("ApiKey", apiKeySchema);
+
+module.exports = ApiKey;
