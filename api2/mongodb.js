@@ -10,6 +10,17 @@ app.use(cors({
   origin: "*",
 }));
 
+// Meningkatkan Timeout Express menjadi lebih lama jika perlu
+app.use((req, res, next) => {
+  res.setTimeout(30000, () => { // Timeout setelah 30 detik
+    res.status(408).json({
+      success: false,
+      message: "Request timeout. Silakan coba lagi."
+    });
+  });
+  next();
+});
+
 // Endpoint untuk memeriksa apakah API key ada di MongoDB
 router.get("/mongodb", validateApiKey, async (req, res) => {
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
@@ -22,8 +33,8 @@ router.get("/mongodb", validateApiKey, async (req, res) => {
   }
 
   try {
-    // Cek apakah API key ada di MongoDB
-    const apiKeyData = await ApiKey.findOne({ key: apiKey });
+    // Cek apakah API key ada di MongoDB, dengan optimasi untuk mencegah timeout
+    const apiKeyData = await ApiKey.findOne({ key: apiKey }).lean();
 
     if (!apiKeyData) {
       return res.status(404).json({
