@@ -11,7 +11,7 @@ app.use(cors({
 }));
 
 // Endpoint untuk memeriksa apakah API key ada di MongoDB
-router.get("/check-api-key", validateApiKey, async (req, res) => {
+router.get("/mongodb", validateApiKey, async (req, res) => {
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
 
   if (!apiKey) {
