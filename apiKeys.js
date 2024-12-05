@@ -29,7 +29,7 @@ const localApiKeys = {
     lastAccessDate: "2024-11-20",
   },
   "67890-FGHIJ": {
-    expiryDate: parseCustomDate("30/11/2024/12:00"),
+    expiryDate: parseCustomDate("30/11/2025/12:00"),
     remainingRequests: 10,
     maxRequests: 10,
     lastAccessDate: "2024-11-20",
