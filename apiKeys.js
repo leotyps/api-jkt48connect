@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 const ApiKey = require("./models/apiKey"); // Path ke model
+
 const parseCustomDate = require("./helpers/dateParser");
 
 const localApiKeys = {
   JKTCONNECT: {
-    expiryDate: "unli", 
+    expiryDate: "unli",
     remainingRequests: "∞",
     maxRequests: "∞",
     lastAccessDate: "2024-11-20",
@@ -41,22 +42,23 @@ const localApiKeys = {
   },
 };
 
+// Sinkronisasi localApiKeys dengan MongoDB
 const syncApiKeysWithDatabase = async () => {
   await mongoose.connect("mongodb+srv://contact:pk9Gxy0yn6azNZJb@jkt48connect.whnvm.mongodb.net/?retryWrites=true&w=majority&appName=jkt48connect", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
 
-  // Simpan API Key dari local ke MongoDB
+  // Simpan local API keys ke MongoDB
   for (const [key, value] of Object.entries(localApiKeys)) {
     await ApiKey.updateOne(
       { key },
       { key, ...value },
-      { upsert: true } // Tambahkan jika tidak ada
+      { upsert: true }
     );
   }
 
-  // Ambil API Key dari MongoDB ke local
+  // Ambil API keys dari MongoDB
   const dbApiKeys = await ApiKey.find();
   const combinedApiKeys = {};
 
@@ -70,8 +72,16 @@ const syncApiKeysWithDatabase = async () => {
   });
 
   mongoose.connection.close();
-
   return combinedApiKeys;
 };
 
-module.exports = syncApiKeysWithDatabase;
+// Ekspor API keys hasil sinkronisasi
+let apiKeys = {};
+
+syncApiKeysWithDatabase().then((data) => {
+  apiKeys = data;
+});
+
+module.exports = new Proxy(apiKeys, {
+  get: (target, prop) => target[prop], // Proxy untuk akses properti secara dinamis
+});
