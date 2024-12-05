@@ -42,7 +42,7 @@ const localApiKeys = {
 };
 
 const syncApiKeysWithDatabase = async () => {
-  await mongoose.connect("mongodb://localhost:27017/yourDatabaseName", {
+  await mongoose.connect("mongodb+srv://contact:pk9Gxy0yn6azNZJb@jkt48connect.whnvm.mongodb.net/?retryWrites=true&w=majority&appName=jkt48connect", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
