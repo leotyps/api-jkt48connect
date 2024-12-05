@@ -1,6 +1,6 @@
-const apiKeys = require("../apiKeys");
+const apiKeys = require("../apiKeys");  // Mengimpor apiKeys yang sudah disinkronkan dengan MongoDB
 
-function validateApiKey(req, res, next) {
+async function validateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
 
   if (!apiKey) {
@@ -34,6 +34,12 @@ function validateApiKey(req, res, next) {
   if (keyData.lastAccessDate !== today) {
     keyData.remainingRequests = keyData.maxRequests === "-" ? "∞" : keyData.maxRequests; // Reset ke limit maksimum jika tidak terbatas
     keyData.lastAccessDate = today; // Update tanggal terakhir akses
+
+    // Update data di MongoDB setelah reset
+    await ApiKey.updateOne(
+      { key: apiKey },
+      { remainingRequests: keyData.remainingRequests, lastAccessDate: keyData.lastAccessDate }
+    );
   }
 
   // Periksa limit request (∞ jika tak terbatas)
@@ -52,6 +58,12 @@ function validateApiKey(req, res, next) {
 
   // Kurangi jumlah request yang tersisa
   keyData.remainingRequests -= 1;
+
+  // Update jumlah request yang tersisa di MongoDB
+  await ApiKey.updateOne(
+    { key: apiKey },
+    { remainingRequests: keyData.remainingRequests }
+  );
 
   next();
 }
