@@ -54,7 +54,7 @@ const syncApiKeysWithDatabase = async () => {
     await ApiKey.updateOne(
       { key },
       { key, ...value },
-      { upsert: false }
+      { upsert: true }
     );
   }
 
