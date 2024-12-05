@@ -20,6 +20,7 @@ const checkApikey = require("./checkApikey");
 const createPayment = require("./orkut-createPayment");
 const orkutStatus = require("../api2/orkut-status");
 const birthday = require("../api2/birthday");
+const mongodb = require("../api2/mongodb");
 
 //Cors
 app.use(cors({
@@ -40,6 +41,7 @@ app.use("/api/member", member);
 app.use("/api/live", nowlive);
 app.use("/api/recent/", reLive);
 app.use("/api/recent", lastLive);
+app.use("/api/", mongodb);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
 app.use("/api", birthday);
