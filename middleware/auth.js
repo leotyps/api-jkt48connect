@@ -1,11 +1,8 @@
-const syncApiKeysWithDatabase = require("../syncApiKeys");
+const syncApiKeysWithDatabase = require("../apiKeys");
 
-let apiKeysCache = {}; // Cache untuk menyimpan API keys yang disinkronkan
-
-async function validateApiKey(req, res, next) {
+function validateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
 
-  // Jika API key tidak ada
   if (!apiKey) {
     return res.status(401).json({
       success: false,
@@ -13,14 +10,8 @@ async function validateApiKey(req, res, next) {
     });
   }
 
-  // Pastikan cache API keys terisi
-  if (Object.keys(apiKeysCache).length === 0) {
-    apiKeysCache = await syncApiKeysWithDatabase();
-  }
+  const keyData = syncApiKeysWithDatabase[apiKey];
 
-  const keyData = apiKeysCache[apiKey];
-
-  // Jika API key tidak valid
   if (!keyData) {
     return res.status(403).json({
       success: false,
@@ -32,7 +23,7 @@ async function validateApiKey(req, res, next) {
   const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
   // Periksa apakah expiryDate = "unli", yang berarti tidak terbatas
-  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > new Date(keyData.expiryDate)) {
+  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > keyData.expiryDate) {
     return res.status(403).json({
       success: false,
       message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
