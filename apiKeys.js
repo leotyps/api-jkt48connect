@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-const ApiKey = require("./models/apiKey"); // Path ke model API Key
 const parseCustomDate = require("./helpers/dateParser");
+const ApiKey = require("./models/apiKey"); // Model untuk API Key
 
-const localApiKeys = {
+const apiKeys = {
   JKTCONNECT: {
-    expiryDate: "unli",
-    remainingRequests: "∞",
-    maxRequests: "∞",
+    expiryDate: "unli", // Tidak terbatas
+    remainingRequests: "∞", // Tidak terbatas
+    maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
   },
   "J48-9F2A7B1D": {
@@ -35,13 +35,13 @@ const localApiKeys = {
   },
   "ForxFyyre": {
     expiryDate: parseCustomDate("21/11/2024/18:15"),
-    remainingRequests: "∞",
-    maxRequests: "∞",
+    remainingRequests: "∞", // Tidak terbatas
+    maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
   },
 };
 
-// Fungsi untuk sinkronisasi API keys ke MongoDB
+// Fungsi untuk menyinkronkan apiKeys ke MongoDB
 const syncApiKeysWithDatabase = async () => {
   try {
     // Koneksi ke MongoDB
@@ -51,8 +51,8 @@ const syncApiKeysWithDatabase = async () => {
     });
     console.log("Koneksi ke MongoDB berhasil");
 
-    // Simpan local API keys ke MongoDB
-    for (const [key, value] of Object.entries(localApiKeys)) {
+    // Simpan atau perbarui API keys ke MongoDB
+    for (const [key, value] of Object.entries(apiKeys)) {
       const expiryDate = value.expiryDate === "unli" ? "unli" : new Date(value.expiryDate);
       const lastAccessDate = new Date(value.lastAccessDate);
 
@@ -66,37 +66,17 @@ const syncApiKeysWithDatabase = async () => {
       console.log(`API key ${key} berhasil disimpan atau diperbarui di MongoDB`);
     }
 
-    // Ambil API keys dari MongoDB
-    const dbApiKeys = await ApiKey.find();
-    const combinedApiKeys = {};
-
-    dbApiKeys.forEach((apiKey) => {
-      combinedApiKeys[apiKey.key] = {
-        expiryDate: apiKey.expiryDate,
-        remainingRequests: apiKey.remainingRequests,
-        maxRequests: apiKey.maxRequests,
-        lastAccessDate: apiKey.lastAccessDate,
-      };
-    });
-
-    console.log("API keys berhasil digabungkan dari MongoDB");
-
     // Menutup koneksi
     await mongoose.connection.close();
-    return combinedApiKeys;
+    console.log("Data API key telah berhasil disinkronkan ke MongoDB");
 
   } catch (error) {
     console.error("Terjadi kesalahan saat menghubungkan atau menyimpan ke MongoDB:", error.message);
   }
 };
 
-// Ekspor API keys hasil sinkronisasi
-let apiKeys = {};
+// Memanggil fungsi syncApiKeysWithDatabase untuk menyimpan data ke MongoDB saat aplikasi dimulai
+syncApiKeysWithDatabase();
 
-syncApiKeysWithDatabase().then((data) => {
-  apiKeys = data;
-  console.log("API keys telah disinkronkan dengan MongoDB");
-});
-
-// Pastikan apiKeys diekspor setelah sinkronisasi selesai
+// Mengekspor apiKeys setelah sinkronisasi
 module.exports = apiKeys;
