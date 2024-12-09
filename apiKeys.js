@@ -37,6 +37,12 @@ const apiKeys = {
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
   },
+  "SAZX": {
+    expiryDate: parseCustomDate("15/12/2024/18:15"),
+    remainingRequests: "∞", // Tidak terbatas
+    maxRequests: "∞", // Tidak terbatas
+    lastAccessDate: "2024-11-20",
+  },
 };
 
 module.exports = apiKeys;
