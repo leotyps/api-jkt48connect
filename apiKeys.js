@@ -31,10 +31,10 @@ const apiKeys = {
     maxRequests: 10,
     lastAccessDate: "2024-11-20",
   },
-  "67890-FGHIJ": {
-    expiryDate: parseCustomDate("30/11/2024/12:00"),
-    remainingRequests: 10,
-    maxRequests: 10,
+  "vyJsnz2$d3v": {
+    expiryDate: "unli",
+    remainingRequests: 150,
+    maxRequests: 150,
     lastAccessDate: "2024-11-20",
   },
   "ForxFyyre": {
