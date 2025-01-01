@@ -10,6 +10,11 @@ app.use(cors({
   origin: "*",
 }));
 
+// Fungsi untuk format angka ke mata uang Rupiah
+function formatRupiah(amount) {
+  return `Rp ${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+}
+
 // Endpoint untuk mengambil data recent berdasarkan grup
 router.get("/", validateApiKey, async (req, res) => {
   const group = req.query.group || "jkt48"; // Grup default adalah "jkt48"
@@ -19,12 +24,12 @@ router.get("/", validateApiKey, async (req, res) => {
     const response = await axios.get(`https://api.crstlnz.my.id/api/recent?group=${group}&type=all`);
     const recentData = response.data;
 
-    // Modifikasi data untuk menambahkan total gift dalam IDR
+    // Modifikasi data untuk menambahkan total gift dalam format Rupiah
     const modifiedRecents = recentData.recents.map((item) => {
       const totalGiftIDR = item.gift_rate * item.points; // Hitung total gift
       return {
         ...item,
-        total_gift_idr: totalGiftIDR, // Tambahkan total gift dalam IDR
+        total_gift: formatRupiah(totalGiftIDR), // Tambahkan total gift dalam format Rupiah
       };
     });
 
