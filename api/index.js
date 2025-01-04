@@ -46,7 +46,7 @@ app.use("/api/", mongodb);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
 app.use("/api", birthday);
-app.use("/api/down", tiktok);
+app.use("/api/downloader/tiktok", tiktok);
 app.use("/api/orkut/createpayment", createPayment);
 app.use("/api/orkut/cekstatus", orkutStatus);
 
