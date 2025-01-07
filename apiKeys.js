@@ -13,6 +13,12 @@ const apiKeys = {
     maxRequests: 50,
     lastAccessDate: "2024-11-20",
   },
+  "SazxOfficial111": {
+    expiryDate: "unli", // Tidak terbatas
+    remainingRequests: "∞", // Tidak terbatas
+    maxRequests: "∞", // Tidak terbatas
+    lastAccessDate: "2024-11-20",
+  },
   "JKT-4F5C3D8A": {
     expiryDate: "unli",
     remainingRequests: 50,
