@@ -25,6 +25,12 @@ const apiKeys = {
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
   },
+  "MarshaLenathea1234567890": {
+    expiryDate: "unli", // Tidak terbatas
+    remainingRequests: 250, // Tidak terbatas
+    maxRequests: 250, // Tidak terbatas
+    lastAccessDate: "2024-11-20",
+  },
   "JKT-4F5C3D8A": {
     expiryDate: "unli",
     remainingRequests: 50,
