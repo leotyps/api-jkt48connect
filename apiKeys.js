@@ -13,6 +13,12 @@ const apiKeys = {
     maxRequests: 50,
     lastAccessDate: "2024-11-20",
   },
+  "fikzz123": {
+    expiryDate: "unli",
+    remainingRequests: 150,
+    maxRequests: 150,
+    lastAccessDate: "2024-11-20",
+  },
   "SazxOfficial111": {
     expiryDate: "unli", // Tidak terbatas
     remainingRequests: "∞", // Tidak terbatas
