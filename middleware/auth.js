@@ -1,5 +1,13 @@
 const dbClient = require("../database"); // Mengimpor fungsi query dari database.js
 
+// Fungsi untuk menangani timeout
+const withTimeout = (promise, timeout) => {
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Request timed out")), timeout)
+  );
+  return Promise.race([promise, timeoutPromise]);
+};
+
 async function validateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
 
@@ -11,8 +19,14 @@ async function validateApiKey(req, res, next) {
   }
 
   try {
-    // Ambil data API key dari database
-    const result = await dbClient.query("SELECT * FROM api_keys WHERE api_key = $1", [apiKey]);
+    // Tentukan timeout untuk query database, misalnya 5 detik
+    const timeout = 5000; // Timeout 5 detik
+
+    // Ambil data API key dari database dengan timeout
+    const result = await withTimeout(
+      dbClient.query("SELECT * FROM api_keys WHERE api_key = $1", [apiKey]),
+      timeout
+    );
 
     if (result.rows.length === 0) {
       return res.status(403).json({
@@ -36,9 +50,12 @@ async function validateApiKey(req, res, next) {
     // Reset limit request jika hari terakhir berbeda dari hari ini
     if (keyData.last_access_date !== today) {
       const newRemainingRequests = keyData.max_requests === "-" ? "∞" : keyData.max_requests;
-      await dbClient.query(
-        "UPDATE api_keys SET remaining_requests = $1, last_access_date = $2 WHERE api_key = $3",
-        [newRemainingRequests, today, apiKey]
+      await withTimeout(
+        dbClient.query(
+          "UPDATE api_keys SET remaining_requests = $1, last_access_date = $2 WHERE api_key = $3",
+          [newRemainingRequests, today, apiKey]
+        ),
+        timeout
       );
     }
 
@@ -56,9 +73,12 @@ async function validateApiKey(req, res, next) {
     }
 
     // Kurangi jumlah request yang tersisa
-    await dbClient.query(
-      "UPDATE api_keys SET remaining_requests = remaining_requests - 1 WHERE api_key = $1",
-      [apiKey]
+    await withTimeout(
+      dbClient.query(
+        "UPDATE api_keys SET remaining_requests = remaining_requests - 1 WHERE api_key = $1",
+        [apiKey]
+      ),
+      timeout
     );
 
     next();
@@ -66,7 +86,7 @@ async function validateApiKey(req, res, next) {
     console.error("Error during API key validation:", error);
     return res.status(500).json({
       success: false,
-      message: "Terjadi kesalahan saat memvalidasi API key. Silakan coba lagi nanti.",
+      message: error.message || "Terjadi kesalahan saat memvalidasi API key. Silakan coba lagi nanti.",
     });
   }
 }
