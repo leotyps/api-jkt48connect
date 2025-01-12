@@ -26,6 +26,7 @@ const apiKeys = {
     remainingRequests: "∞", // Tidak terbatas
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
+    seller: true,
   },
   "MarshaLenathea1234567890": {
     expiryDate: "unli", // Tidak terbatas
