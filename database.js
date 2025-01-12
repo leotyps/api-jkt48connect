@@ -8,8 +8,8 @@ const pool = new Pool({
   password: "vAgy5JNXz4woO46g8fho4g", // Gantilah dengan password Anda
   port: 26257,
   ssl: { rejectUnauthorized: false },
-  connectionTimeoutMillis: 5000, // Timeout koneksi 5 detik
-  statement_timeout: 5000, // Timeout query 5 detik
+  connectionTimeoutMillis: 10000, // Timeout koneksi 5 detik
+  statement_timeout: 10000, // Timeout query 5 detik
 });
 
 // Fungsi untuk membuka koneksi ke CockroachDB (pooling akan menangani koneksi)
