@@ -1,4 +1,4 @@
-const { Client } = require('pg'); // Import pg (PostgreSQL client)
+const { Client } = require('pg'); // PostgreSQL client
 const parseCustomDate = require("./helpers/dateParser");
 
 const apiKeys = {
@@ -72,49 +72,93 @@ const apiKeys = {
   },
 };
 
-// Fungsi untuk menyimpan API key baru ke database CockroachDB
-async function saveApiKeyToDatabase(apiKey, data) {
-  const client = new Client({
-    connectionString: 'postgresql://jkt48connect_apikey:vAgy5JNXz4woO46g8fho4g@jkt48connect-7018.j77.aws-ap-southeast-1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full',
-  });
+// Koneksi database
+const dbClient = new Client({
+  connectionString: 'postgresql://jkt48connect_apikey:vAgy5JNXz4woO46g8fho4g@jkt48connect-7018.j77.aws-ap-southeast-1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full',
+});
 
+// Sinkronisasi data ke database
+async function syncApiKeysWithDatabase() {
   try {
-    await client.connect(); // Koneksi ke database
+    await dbClient.connect();
+    console.log("Database connected successfully.");
 
-    // Query untuk menambahkan API key baru ke tabel
-    const query = `
-      INSERT INTO api_keys (api_key, expiry_date, remaining_requests, max_requests, last_access_date)
-      VALUES ($1, $2, $3, $4, $5)
-      ON CONFLICT (api_key) DO NOTHING
-    `;
+    // Ambil data API keys dari database
+    const result = await dbClient.query("SELECT * FROM api_keys");
+    const dbApiKeys = result.rows.reduce((acc, row) => {
+      acc[row.api_key] = {
+        expiryDate: row.expiry_date,
+        remainingRequests: row.remaining_requests,
+        maxRequests: row.max_requests,
+        lastAccessDate: row.last_access_date,
+        seller: row.seller || false,
+      };
+      return acc;
+    }, {});
 
-    // Menyiapkan data untuk disimpan
-    const values = [
-      apiKey,
-      data.expiryDate,
-      data.remainingRequests,
-      data.maxRequests,
-      data.lastAccessDate,
-    ];
+    // Perbarui database berdasarkan `apiKeys` lokal
+    for (const [apiKey, data] of Object.entries(apiKeys)) {
+      if (!dbApiKeys[apiKey]) {
+        // Tambahkan API key baru jika belum ada di database
+        await dbClient.query(
+          `INSERT INTO api_keys (api_key, expiry_date, remaining_requests, max_requests, last_access_date, seller) 
+           VALUES ($1, $2, $3, $4, $5, $6)`,
+          [
+            apiKey,
+            data.expiryDate,
+            data.remainingRequests,
+            data.maxRequests,
+            data.lastAccessDate,
+            data.seller || false,
+          ]
+        );
+        console.log(`API key ${apiKey} added to database.`);
+      } else {
+        // Perbarui API key jika ada perubahan
+        const dbData = dbApiKeys[apiKey];
+        if (
+          dbData.expiryDate !== data.expiryDate ||
+          dbData.remainingRequests !== data.remainingRequests ||
+          dbData.maxRequests !== data.maxRequests ||
+          dbData.lastAccessDate !== data.lastAccessDate ||
+          dbData.seller !== (data.seller || false)
+        ) {
+          await dbClient.query(
+            `UPDATE api_keys 
+             SET expiry_date = $2, remaining_requests = $3, max_requests = $4, last_access_date = $5, seller = $6 
+             WHERE api_key = $1`,
+            [
+              apiKey,
+              data.expiryDate,
+              data.remainingRequests,
+              data.maxRequests,
+              data.lastAccessDate,
+              data.seller || false,
+            ]
+          );
+          console.log(`API key ${apiKey} updated in database.`);
+        }
+      }
+    }
 
-    // Menjalankan query
-    await client.query(query, values);
-    console.log(`API key ${apiKey} berhasil disimpan ke database.`);
+    // Hapus API keys dari database yang tidak ada di `apiKeys` lokal
+    for (const dbApiKey in dbApiKeys) {
+      if (!apiKeys[dbApiKey]) {
+        await dbClient.query(`DELETE FROM api_keys WHERE api_key = $1`, [dbApiKey]);
+        console.log(`API key ${dbApiKey} removed from database.`);
+      }
+    }
+
+    console.log("Synchronization completed.");
   } catch (error) {
-    console.error('Gagal menyimpan API key ke database:', error);
+    console.error("Error syncing API keys with database:", error);
   } finally {
-    await client.end(); // Menutup koneksi ke database
+    await dbClient.end();
+    console.log("Database connection closed.");
   }
 }
 
-// Menyimpan semua API keys yang sudah ada ke dalam database
-async function saveAllApiKeys() {
-  for (const apiKey in apiKeys) {
-    await saveApiKeyToDatabase(apiKey, apiKeys[apiKey]);
-  }
-}
-
-// Memanggil fungsi untuk menyimpan API keys
-saveAllApiKeys();
+// Jalankan sinkronisasi
+syncApiKeysWithDatabase();
 
 module.exports = apiKeys;
