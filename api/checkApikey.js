@@ -25,11 +25,11 @@ function getTodayDate() {
   return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 }
 
-
 // Enable CORS for all domains (or specific domains)
 app.use(cors({
   origin: '*', // Atau set domain spesifik, misalnya 'https://yourfrontenddomain.com'
 }));
+
 // Endpoint untuk memeriksa API key
 router.get("/check-apikey/:api_key", (req, res) => {
   const { api_key } = req.params; // Ambil API key dari path parameter
@@ -76,6 +76,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
       expiry_date: formatDate(keyData.expiryDate), // Tanggal kedaluwarsa diformat
       remaining_requests: "∞", // Limit tak terbatas
       max_requests: "∞", // Limit tak terbatas
+      seller: keyData.seller || false, // Kembalikan informasi seller
     });
   }
 
@@ -93,6 +94,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
     expiry_date: formatDate(keyData.expiryDate), // Tanggal kedaluwarsa diformat
     remaining_requests: keyData.remainingRequests, // Sisa request
     max_requests: keyData.maxRequests === "-" ? "∞" : keyData.maxRequests, // Limit maksimum
+    seller: keyData.seller || false, // Kembalikan informasi seller
   });
 });
 
