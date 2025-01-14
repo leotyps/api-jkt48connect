@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+const fs = require("fs");
 const validateApiKey = require("../middleware/auth"); // Middleware validasi API key
 const qrisDinamis = require("qris-dinamis"); // Import modul qris-dinamis
 const router = express.Router();
@@ -23,13 +25,22 @@ router.get("/", validateApiKey, async (req, res) => {
   }
 
   try {
-    // Membuat file QRIS dalam bentuk buffer
-    const buffer = qrisDinamis.makeBuffer(qris, { nominal: amount });
+    // Path sementara untuk menyimpan file QRIS
+    const tempPath = path.join("/tmp", `qris-${Date.now()}.png`);
 
-    // Mengembalikan QRIS sebagai respons
+    // Membuat file QRIS
+    qrisDinamis.makeFile(qris, { nominal: amount, path: tempPath });
+
+    // Membaca file dan mengirimkan sebagai respons
+    const fileBuffer = fs.readFileSync(tempPath);
+
+    // Menghapus file setelah membaca
+    fs.unlinkSync(tempPath);
+
+    // Mengembalikan QRIS sebagai respons gambar
     res.setHeader("Content-Type", "image/png");
     res.setHeader("Content-Disposition", "inline; filename=qris.png");
-    res.send(buffer);
+    res.send(fileBuffer);
   } catch (error) {
     console.error("Error creating QRIS:", error.message);
 
