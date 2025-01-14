@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { createPaymentQr } = require('@sumshiiy/saweria-createqr'); // Mengimpor fungsi createPaymentQr
+const { createPaymentQr } = require('saweria-createqr'); // Mengimpor fungsi createPaymentQr
 const validateApiKey = require("../middleware/auth"); // Pastikan Anda memiliki middleware untuk validasi API key
 const router = express.Router();
 
