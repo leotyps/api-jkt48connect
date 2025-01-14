@@ -1,7 +1,7 @@
 const express = require("express");
+const { createPaymentString, createPaymentQr } = require("jkt48connect-saweria"); // Import modul jkt48connect-saweria
 const cors = require("cors");
 const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
-const { createPaymentQr } = require("jkt48connect-saweria"); // Import fungsi dari jkt48connect-saweria
 const app = express();
 const router = express.Router();
 
@@ -22,21 +22,13 @@ router.get("/", validateApiKey, async (req, res) => {
   }
 
   try {
-    // Menggunakan module jkt48connect-saweria untuk membuat pembayaran QR
+    // Memanggil fungsi createPaymentQr dari modul jkt48connect-saweria untuk membuat pembayaran
     const result = await createPaymentQr(username, { amount: parseInt(amount), message });
 
-    // Mengembalikan data dalam format JSON langsung tanpa creator
+    // Mengembalikan data hasil pembayaran dalam format JSON
     res.json({
       author: "Valzyy",
-      trx_id: result.trx_id,
-      message: result.message,
-      amount: result.amount,
-      qr_string: result.qr_string,
-      created_at: result.created_at,
-      total_dibayar: result.total_dibayar,
-      saweria_username: result.saweria_username,
-      saweria_apikey: result.saweria_apikey,
-      qr_image: result.qr_image, // Menyertakan qr_image yang diterima
+      ...result, // Menyisipkan data hasil pembayaran langsung dari modul
     });
   } catch (error) {
     console.error("Error creating payment:", error.message);
