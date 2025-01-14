@@ -23,7 +23,12 @@
     "cors": "^2.8.5",
     "mongoose": "^7.1.0",
     "jkt48connect-saweria": "^1.0.0",
-    "qris-dinamis": "^1.0.2"
+    "qris-dinamis": "^1.0.2",
+    "chalk": "^4.1.2",
+    "cheerio": "^1.0.0",
+    "qrcode": "^1.5.4",
+    "random-user": "^2.0.2",
+    "saweria": "^2.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.0"
