@@ -2,6 +2,7 @@ const express = require("express");
 const { createPaymentString, createPaymentQr } = require("jkt48connect-saweria"); // Import modul jkt48connect-saweria
 const cors = require("cors");
 const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
+const axios = require("axios");
 const app = express();
 const router = express.Router();
 
@@ -22,8 +23,18 @@ router.get("/", validateApiKey, async (req, res) => {
   }
 
   try {
+    // Menambahkan headers khusus untuk menghindari error 403
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3', 
+       // Ganti dengan API key Anda jika diperlukan
+    };
+
     // Memanggil fungsi createPaymentQr dari modul jkt48connect-saweria untuk membuat pembayaran
-    const result = await createPaymentQr(username, { amount: parseInt(amount), message });
+    const result = await createPaymentQr(username, { 
+      amount: parseInt(amount), 
+      message, 
+      headers // Menambahkan headers ke dalam request
+    });
 
     // Mengembalikan data hasil pembayaran dalam format JSON
     res.json({
