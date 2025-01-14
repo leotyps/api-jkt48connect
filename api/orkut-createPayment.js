@@ -26,7 +26,13 @@ router.get("/", validateApiKey, async (req, res) => {
 
   try {
     // Path sementara untuk menyimpan file QRIS
-    const tempPath = path.join("/tmp", `qris-${Date.now()}.png`);
+    const tempDir = "/tmp";
+    const tempPath = path.join(tempDir, `qris-${Date.now()}.png`);
+
+    // Pastikan folder /tmp ada
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir);
+    }
 
     // Membuat file QRIS
     qrisDinamis.makeFile(qris, { nominal: amount, path: tempPath });
