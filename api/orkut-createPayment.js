@@ -2,8 +2,15 @@ const express = require("express");
 const cors = require("cors");
 const validateApiKey = require("../middleware/auth"); // Middleware validasi API key
 const qrisDinamis = require("qris-dinamis"); // Import modul qris-dinamis
+const fs = require("fs");
 const path = require("path");
 const router = express.Router();
+
+// Pastikan direktori output tersedia
+const outputDir = path.resolve(__dirname, "../output");
+if (!fs.existsSync(outputDir)) {
+  fs.mkdirSync(outputDir, { recursive: true });
+}
 
 // Enable CORS
 router.use(
@@ -24,14 +31,15 @@ router.get("/", validateApiKey, async (req, res) => {
   }
 
   try {
-    // Membuat QRIS sebagai file
-    const result = qrisDinamis.makeFile(qris, {
-      nominal: amount,
-      path: `output/qris-${Date.now()}.png`, // Nama file dinamis berdasarkan timestamp
-    });
+    // Menentukan path file QRIS
+    const fileName = `qris-${Date.now()}.png`;
+    const filePath = path.join(outputDir, fileName);
 
-    // Menyusun path file
-    const filePath = path.resolve(result.path);
+    // Membuat QRIS sebagai file
+    qrisDinamis.makeFile(qris, {
+      nominal: amount,
+      path: filePath, // Menyimpan file ke lokasi output
+    });
 
     // Menyusun respons
     res.json({
