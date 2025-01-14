@@ -2,8 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-const validateApiKey = require("../middleware/auth"); // Middleware validasi API key
-const qrisDinamis = require("qris-dinamis"); // Import modul qris-dinamis
+const axios = require("axios");
+const validateApiKey = require("../middleware/auth");
+const qrisDinamis = require("qris-dinamis");
 const router = express.Router();
 
 // Enable CORS
@@ -15,7 +16,7 @@ router.use(
 
 // Endpoint untuk membuat pembayaran QRIS
 router.get("/", validateApiKey, async (req, res) => {
-  const { amount, qris } = req.query; // Mengambil parameter query
+  const { amount, qris } = req.query;
 
   // Validasi parameter wajib
   if (!amount || !qris) {
@@ -37,18 +38,31 @@ router.get("/", validateApiKey, async (req, res) => {
     // Membuat file QRIS
     qrisDinamis.makeFile(qris, { nominal: amount, path: tempPath });
 
-    // Membaca file dan mengirimkan sebagai respons
+    // Baca file QRIS yang telah dibuat
     const fileBuffer = fs.readFileSync(tempPath);
 
-    // Menghapus file setelah membaca
+    // Upload file ke Catbox
+    const formData = new FormData();
+    formData.append("reqtype", "fileupload");
+    formData.append("fileToUpload", fs.createReadStream(tempPath));
+
+    const response = await axios.post("https://catbox.moe/user/api.php", formData, {
+      headers: {
+        ...formData.getHeaders(),
+      },
+    });
+
+    // Hapus file lokal setelah diunggah
     fs.unlinkSync(tempPath);
 
-    // Mengembalikan QRIS sebagai respons gambar
-    res.setHeader("Content-Type", "image/png");
-    res.setHeader("Content-Disposition", "inline; filename=qris.png");
-    res.send(fileBuffer);
+    // Kirim URL hasil upload ke Catbox sebagai respons
+    res.json({
+      author: "Valzyy",
+      message: "QRIS berhasil dibuat.",
+      catboxUrl: response.data, // URL hasil unggahan Catbox
+    });
   } catch (error) {
-    console.error("Error creating QRIS:", error.message);
+    console.error("Error creating or uploading QRIS:", error.message);
 
     // Mengembalikan error response jika terjadi kesalahan
     res.status(500).json({
