@@ -1,8 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const { createPaymentQr } = require("saweria-createqr");
+const { createPaymentQr } = require("saweria-createqr"); // Mengimpor fungsi createPaymentQr dari modul saweria-createqr
 const validateApiKey = require("../middleware/auth");
-const path = require("path"); // Untuk menentukan path tempat menyimpan file QR
 const router = express.Router();
 
 // Enable CORS
@@ -12,7 +11,7 @@ router.use(
   })
 );
 
-// Endpoint untuk membuat pembayaran QRIS
+// Endpoint untuk membuat pembayaran QRIS menggunakan Saweria
 router.get("/", validateApiKey, async (req, res) => {
   const { amount, username, message } = req.query;
 
@@ -24,14 +23,17 @@ router.get("/", validateApiKey, async (req, res) => {
   }
 
   try {
-    // Membuat QRIS menggunakan createPaymentQr dari saweria-createqr
-    const result = await createPaymentQr(username, path, { amount, message });
+    // Membuat QRIS menggunakan username dan amount dengan optional message
+    const result = await createPaymentQr(username, {
+      amount: parseInt(amount),
+      message: message || "", // Jika message tidak disertakan, kosongkan
+    });
 
-    // Mengembalikan respons dengan URL hasil QR
+    // Mengirimkan hasil QRIS dalam format JSON
     res.json({
       author: "Valzyy",
       message: "QRIS berhasil dibuat.",
-      qrisUrl: result, // URL hasil QR yang dapat digunakan
+      qrisUrl: result.url, // URL QRIS yang dihasilkan oleh Saweria
     });
   } catch (error) {
     console.error("Error creating QRIS:", error.message);
