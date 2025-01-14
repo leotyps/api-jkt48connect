@@ -31,9 +31,16 @@ router.get("/", validateApiKey, async (req, res) => {
 
     // Mengirimkan hasil QRIS dalam format JSON
     res.json({
-      author: "Valzyy",
-      message: "QRIS berhasil dibuat.",
-      qrisUrl: result.url, // URL QRIS yang dihasilkan oleh Saweria
+      author: "@sumshiiy", // Nama author yang sesuai
+      trx_id: result.trx_id, // ID transaksi yang dihasilkan
+      message: result.message, // Pesan yang disertakan dalam QRIS
+      amount: result.amount, // Jumlah pembayaran yang dihasilkan
+      qr_string: result.qr_string, // String QRIS yang dihasilkan
+      created_at: result.created_at, // Tanggal pembuatan QRIS
+      total_dibayar: result.total_dibayar, // Total yang dibayar (jika ada)
+      saweria_username: result.saweria_username, // Username Saweria
+      saweria_apikey: result.saweria_apikey, // API key Saweria
+      qr_image: result.qr_image, // URL gambar QRIS
     });
   } catch (error) {
     console.error("Error creating QRIS:", error.message);
