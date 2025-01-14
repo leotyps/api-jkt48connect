@@ -2,11 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const validateApiKey = require("../middleware/auth"); // Middleware validasi API key
 const qrisDinamis = require("qris-dinamis"); // Import modul qris-dinamis
-const app = express();
 const router = express.Router();
 
 // Enable CORS
-app.use(
+router.use(
   cors({
     origin: "*",
   })
@@ -14,7 +13,7 @@ app.use(
 
 // Endpoint untuk membuat pembayaran QRIS
 router.get("/", validateApiKey, async (req, res) => {
-  const { amount, qris, logostore } = req.query; // Mengambil parameter query
+  const { amount, qris } = req.query; // Mengambil parameter query
 
   // Validasi parameter wajib
   if (!amount || !qris) {
@@ -24,25 +23,24 @@ router.get("/", validateApiKey, async (req, res) => {
   }
 
   try {
-    // Opsi untuk membuat QRIS
-    const options = {
+    // Membuat QRIS dalam format Base64
+    const result = qrisDinamis.makeFile(qris, {
       nominal: amount,
-    };
+      base64: true,
+    });
 
-    // Tambahkan opsi path jika logostore disediakan
-    if (logostore) {
-      options.path = `output/${encodeURIComponent(logostore)}.jpg`;
+    // Pastikan hasil Base64 tersedia
+    if (!result.base64) {
+      return res.status(500).json({
+        message: "Gagal menghasilkan QRIS dalam format Base64.",
+      });
     }
-
-    // Membuat file QRIS
-    const result = qrisDinamis.makeFile(qris, options);
 
     // Menyusun respons
     res.json({
       author: "Valzyy",
       message: "QRIS berhasil dibuat.",
-      filePath: result.path || null, // Path file jika disediakan
-      base64: result.base64 || null, // Base64 jika tersedia
+      base64: result.base64,
     });
   } catch (error) {
     console.error("Error creating QRIS:", error.message);
