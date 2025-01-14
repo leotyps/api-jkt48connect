@@ -1,10 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
-const fs = require("fs");
 const axios = require("axios");
 const validateApiKey = require("../middleware/auth");
 const qrisDinamis = require("qris-dinamis");
+const FormData = require("form-data");
 const router = express.Router();
 
 // Enable CORS
@@ -26,34 +25,20 @@ router.get("/", validateApiKey, async (req, res) => {
   }
 
   try {
-    // Path sementara untuk menyimpan file QRIS
-    const tempDir = "/tmp";
-    const tempPath = path.join(tempDir, `qris-${Date.now()}.png`);
+    // Membuat QRIS file sebagai buffer
+    const qrisFileBuffer = qrisDinamis.makeBuffer(qris, { nominal: amount });
 
-    // Pastikan folder /tmp ada
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir);
-    }
-
-    // Membuat file QRIS
-    qrisDinamis.makeFile(qris, { nominal: amount, path: tempPath });
-
-    // Baca file QRIS yang telah dibuat
-    const fileBuffer = fs.readFileSync(tempPath);
-
-    // Upload file ke Catbox
+    // Buat FormData untuk upload ke Catbox
     const formData = new FormData();
     formData.append("reqtype", "fileupload");
-    formData.append("fileToUpload", fs.createReadStream(tempPath));
+    formData.append("fileToUpload", qrisFileBuffer, { filename: "qris.png" });
 
+    // Mengirim file ke Catbox
     const response = await axios.post("https://catbox.moe/user/api.php", formData, {
       headers: {
         ...formData.getHeaders(),
       },
     });
-
-    // Hapus file lokal setelah diunggah
-    fs.unlinkSync(tempPath);
 
     // Kirim URL hasil upload ke Catbox sebagai respons
     res.json({
