@@ -1,5 +1,5 @@
 const express = require("express");
-const { createPaymentString, createPaymentQr } = require("jkt48connect-saweria"); // Import modul jkt48connect-saweria
+const { createPaymentString, createPaymentQr } = require("../saweria.js"); // Import modul jkt48connect-saweria
 const cors = require("cors");
 const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
 const axios = require("axios");
