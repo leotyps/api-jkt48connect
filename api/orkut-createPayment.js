@@ -1,9 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const axios = require("axios");
+const { createPaymentQr } = require("saweria-createqr");
 const validateApiKey = require("../middleware/auth");
-const qrisDinamis = require("qris-dinamis");
-const FormData = require("form-data");
+const path = require("path"); // Untuk menentukan path tempat menyimpan file QR
 const router = express.Router();
 
 // Enable CORS
@@ -15,39 +14,27 @@ router.use(
 
 // Endpoint untuk membuat pembayaran QRIS
 router.get("/", validateApiKey, async (req, res) => {
-  const { amount, qris } = req.query;
+  const { amount, username, message } = req.query;
 
   // Validasi parameter wajib
-  if (!amount || !qris) {
+  if (!amount || !username) {
     return res.status(400).json({
-      message: "Parameter 'amount' dan 'qris' harus disertakan.",
+      message: "Parameter 'amount' dan 'username' harus disertakan.",
     });
   }
 
   try {
-    // Membuat QRIS dalam bentuk Buffer
-    const buffer = qrisDinamis.makeBuffer(qris, { nominal: amount });
+    // Membuat QRIS menggunakan createPaymentQr dari saweria-createqr
+    const result = await createPaymentQr(username, path, { amount, message });
 
-    // Buat FormData untuk upload ke Catbox
-    const formData = new FormData();
-    formData.append("reqtype", "fileupload");
-    formData.append("fileToUpload", buffer, { filename: "qris.png", contentType: "image/png" });
-
-    // Mengirim file ke Catbox
-    const response = await axios.post("https://catbox.moe/user/api.php", formData, {
-      headers: {
-        ...formData.getHeaders(),
-      },
-    });
-
-    // Kirim URL hasil upload ke Catbox sebagai respons
+    // Mengembalikan respons dengan URL hasil QR
     res.json({
       author: "Valzyy",
       message: "QRIS berhasil dibuat.",
-      catboxUrl: response.data, // URL hasil unggahan Catbox
+      qrisUrl: result, // URL hasil QR yang dapat digunakan
     });
   } catch (error) {
-    console.error("Error creating or uploading QRIS:", error.message);
+    console.error("Error creating QRIS:", error.message);
 
     // Mengembalikan error response jika terjadi kesalahan
     res.status(500).json({
