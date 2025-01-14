@@ -26,8 +26,7 @@ router.get("/", validateApiKey, async (req, res) => {
     // Menambahkan headers khusus untuk menghindari error 403
     const headers = {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3', 
-      'Authorization': 'Bearer JKTCONNECT' // Ganti dengan token API yang benar jika diperlukadiperluk// Ganti dengan API key Anda jika diperlukan
-    }  
+      'Authorization': 'Bearer JKTCONNECT', // Ganti dengan token API yang benar jika diperlukadiperluk// Ganti dengan API key Anda jika diperlukan
   };
 
     // Memanggil fungsi createPaymentQr dari modul jkt48connect-saweria untuk membuat pembayaran
