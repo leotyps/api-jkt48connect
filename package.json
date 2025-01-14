@@ -22,6 +22,7 @@
     "@vercel/analytics": "^1.4.1",
     "cors": "^2.8.5",
     "mongoose": "^7.1.0",
+    "jkt48connect-saweria": "^1.0.0",
     "qris-dinamis": "^1.0.2"
   },
   "devDependencies": {
