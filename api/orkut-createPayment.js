@@ -1,13 +1,13 @@
 const express = require("express");
 const cors = require("cors");
-const { createPaymentQr } = require("saweria-createqr"); // Mengimpor fungsi createPaymentQr dari modul saweria-createqr
-const validateApiKey = require("../middleware/auth");
+const { createPaymentQr } = require('@sumshiiy/saweria-createqr'); // Mengimpor fungsi createPaymentQr
+const validateApiKey = require("../middleware/auth"); // Pastikan Anda memiliki middleware untuk validasi API key
 const router = express.Router();
 
-// Enable CORS
+// Enable CORS untuk akses dari berbagai domain
 router.use(
   cors({
-    origin: "*",
+    origin: "*", // Atur origin jika perlu, bisa spesifik ke domain Anda
   })
 );
 
@@ -25,19 +25,19 @@ router.get("/", validateApiKey, async (req, res) => {
   try {
     // Membuat QRIS menggunakan username dan amount dengan optional message
     const result = await createPaymentQr(username, {
-      amount: parseInt(amount),
-      message: message || "", // Jika message tidak disertakan, kosongkan
+      amount: parseInt(amount), // Mengonversi amount menjadi integer
+      message: message || "",    // Jika message tidak disertakan, gunakan string kosong
     });
 
     // Mengirimkan hasil QRIS dalam format JSON
     res.json({
-      author: "@sumshiiy", // Nama author yang sesuai
-      trx_id: result.trx_id, // ID transaksi yang dihasilkan
+      author: "@sumshiiy", // Nama author
+      trx_id: result.trx_id, // ID transaksi
       message: result.message, // Pesan yang disertakan dalam QRIS
       amount: result.amount, // Jumlah pembayaran yang dihasilkan
       qr_string: result.qr_string, // String QRIS yang dihasilkan
       created_at: result.created_at, // Tanggal pembuatan QRIS
-      total_dibayar: result.total_dibayar, // Total yang dibayar (jika ada)
+      total_dibayar: result.total_dibayar, // Total yang dibayar
       saweria_username: result.saweria_username, // Username Saweria
       saweria_apikey: result.saweria_apikey, // API key Saweria
       qr_image: result.qr_image, // URL gambar QRIS
