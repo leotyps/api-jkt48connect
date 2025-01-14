@@ -1,50 +1,55 @@
 const express = require("express");
-const axios = require("axios");
-const cors = require('cors');
-const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
+const cors = require("cors");
+const validateApiKey = require("../middleware/auth"); // Middleware validasi API key
+const qrisDinamis = require("qris-dinamis"); // Import modul qris-dinamis
 const app = express();
 const router = express.Router();
 
-// Enable CORS for all domains (or specific domains)
-app.use(cors({
-  origin: '*', 
-}));
+// Enable CORS
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
-// Endpoint untuk membuat pembayaran
+// Endpoint untuk membuat pembayaran QRIS
 router.get("/", validateApiKey, async (req, res) => {
-  const { amount, codeqr, logostore } = req.query; // Mendapatkan parameter amount, codeqr, dan logostore dari query URL
+  const { amount, qris, logostore } = req.query; // Mengambil parameter query
 
-  // Pastikan amount dan codeqr ada dalam query
-  if (!amount || !codeqr) {
+  // Validasi parameter wajib
+  if (!amount || !qris) {
     return res.status(400).json({
-      message: "Parameter 'amount' dan 'codeqr' harus disertakan.",
+      message: "Parameter 'amount' dan 'qris' harus disertakan.",
     });
   }
 
   try {
-    // Membentuk URL berdasarkan apakah logostore disertakan atau tidak
-    const apiUrl = `https://apiv2.abidev.tech/api/orkut/createpayment?amount=${amount}&codeqr=${codeqr}${
-      logostore ? `&logostore=${encodeURIComponent(logostore)}` : ""
-    }`;
+    // Opsi untuk membuat QRIS
+    const options = {
+      nominal: amount,
+    };
 
-    // Meminta data dari API pembayaran
-    const response = await axios.get(apiUrl);
-    const paymentData = response.data;
+    // Tambahkan opsi path jika logostore disediakan
+    if (logostore) {
+      options.path = `output/${encodeURIComponent(logostore)}.jpg`;
+    }
 
-    // Menghapus data 'creator' dari respons
-    delete paymentData.creator;
+    // Membuat file QRIS
+    const result = qrisDinamis.makeFile(qris, options);
 
-    // Mengembalikan data dalam format JSON langsung tanpa author
+    // Menyusun respons
     res.json({
       author: "Valzyy",
-      ...paymentData, // Menyisipkan data pembayaran langsung
+      message: "QRIS berhasil dibuat.",
+      filePath: result.path || null, // Path file jika disediakan
+      base64: result.base64 || null, // Base64 jika tersedia
     });
   } catch (error) {
-    console.error("Error creating payment:", error.message);
+    console.error("Error creating QRIS:", error.message);
 
     // Mengembalikan error response jika terjadi kesalahan
     res.status(500).json({
-      message: "Gagal membuat pembayaran.",
+      message: "Gagal membuat QRIS.",
       error: error.message,
     });
   }
