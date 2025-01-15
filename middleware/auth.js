@@ -6,18 +6,6 @@ const dbClient = new Client({
 });
 
 // Fungsi untuk memeriksa API key di database
-async function getApiKeyData(apiKey) {
-  try {
-    const query = `SELECT * FROM api_keys WHERE api_key = $1`;
-    const result = await dbClient.query(query, [apiKey]);
-    return result.rows[0]; // Mengembalikan data API key (jika ada)
-  } catch (error) {
-    console.error("Error fetching API key from database:", error);
-    return null;
-  }
-}
-
-// Middleware untuk validasi API key
 async function validateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
 
@@ -41,7 +29,7 @@ async function validateApiKey(req, res, next) {
   const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
   // Periksa apakah expiryDate = "unli", yang berarti tidak terbatas
-  if (keyData.expiry_date !== "unli" && keyData.expiry_date !== "-" && now > new Date(keyData.expiry_date)) {
+  if (keyData.expiry_date && keyData.expiry_date !== "unli" && keyData.expiry_date !== "-" && now > new Date(keyData.expiry_date)) {
     return res.status(403).json({
       success: false,
       message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
@@ -97,7 +85,6 @@ async function validateApiKey(req, res, next) {
 
   next();
 }
-
 // Inisialisasi koneksi ke database
 (async () => {
   try {
