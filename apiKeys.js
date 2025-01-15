@@ -9,7 +9,7 @@ const apiKeys = {
     lastAccessDate: "2024-11-20",
     seller: true,
   },
-  "J48-9F2A7B1D": {
+  "ASU": {
     expiryDate: "unli",
     remainingRequests: 50,
     maxRequests: 50,
