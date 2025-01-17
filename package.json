@@ -25,6 +25,7 @@
     "jkt48connect-saweria": "^1.0.0",
     "qris-dinamis": "^1.0.2",
     "chalk": "^4.1.2",
+    "uuid": "^11.0.5",
     "cheerio": "^1.0.0",
     "crypto": "^1.0.1",
     "qrcode": "^1.5.4",
