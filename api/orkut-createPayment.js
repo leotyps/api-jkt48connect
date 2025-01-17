@@ -1,5 +1,6 @@
 const express = require("express");
-const validateApiKey = require("../middleware/auth"); // Import middleware
+const validateApiKey = require("../middleware/auth");
+const { createQr } = require("../helpers/qr");
 const router = express.Router();
 
 // Helper Function
@@ -59,6 +60,9 @@ router.get("/", validateApiKey, async (req, res) => {
       fee || "0"
     );
 
+    // Buat QR Code dan unggah ke Catbox.moe
+    const qrResult = await createQr(dynamicQRIS);
+
     res.json({
       author: "Valzyy",
       originalQRIS: qris,
@@ -67,11 +71,12 @@ router.get("/", validateApiKey, async (req, res) => {
       includeFee: includeFee === "true",
       feeType,
       fee,
+      qrImageUrl: qrResult.url, // URL hasil upload ke Catbox.moe
     });
   } catch (error) {
     console.error("Error creating dynamic QRIS:", error.message);
     res.status(500).json({
-      message: "Gagal mengonversi QRIS.",
+      message: "Gagal membuat QRIS dinamis.",
       error: error.message,
     });
   }
