@@ -1,9 +1,10 @@
 const express = require("express");
 const validateApiKey = require("../middleware/auth");
 const { createQr } = require("../helpers/qr");
+const { generateSignature } = require("../helpers/signature");
+const crypto = require("crypto");
 const router = express.Router();
 
-// Helper Function
 const convertCRC16 = (str) => {
   let crc = 0xffff;
   const strlen = str.length;
@@ -40,27 +41,43 @@ const createDynamicQRIS = (qris, amount, includeFee = false, feeType = "rupiah",
   return finalResult;
 };
 
-// Route Handler
-router.get("/", validateApiKey, async (req, res) => {
-  const { qris, amount, includeFee, feeType, fee } = req.query;
+const generateRandomKey = (length = 32) => {
+  return crypto.randomBytes(length).toString("hex");
+};
 
-  // Validate required parameters
-  if (!qris || !amount) {
+const generateMerchantOrderId = () => {
+  const timestamp = Date.now().toString();
+  const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
+  return `ORD${timestamp}${randomSuffix}`;
+};
+
+router.get("/", validateApiKey, async (req, res) => {
+  const { qris, amount, includeFee, feeType, fee, merchantCode } = req.query;
+
+  if (!qris || !amount || !merchantCode) {
     return res.status(400).json({
-      message: "Parameter 'qris' dan 'amount' harus disertakan.",
+      message: "Parameter 'qris', 'amount', dan 'merchantCode' harus disertakan.",
     });
   }
 
   try {
+    // Generate mKey and merchantOrderId automatically
+    const mKey = generateRandomKey(16);
+    const merchantOrderId = generateMerchantOrderId();
+
+    // Generate dynamic QRIS
     const dynamicQRIS = createDynamicQRIS(
       qris,
       amount,
-      includeFee === "true", // Convert string to boolean
+      includeFee === "true",
       feeType || "rupiah",
       fee || "0"
     );
 
-    // Buat QR Code dan unggah ke Catbox.moe
+    // Generate signature
+    const signature = generateSignature(merchantCode, merchantOrderId, amount, mKey);
+
+    // Create QR Code
     const qrResult = await createQr(dynamicQRIS);
 
     res.json({
@@ -71,7 +88,10 @@ router.get("/", validateApiKey, async (req, res) => {
       includeFee: includeFee === "true",
       feeType,
       fee,
-      qrImageUrl: qrResult.url, // URL hasil upload ke Catbox.moe
+      qrImageUrl: qrResult.url,
+      merchantOrderId,
+      mKey,
+      signature,
     });
   } catch (error) {
     console.error("Error creating dynamic QRIS:", error.message);
