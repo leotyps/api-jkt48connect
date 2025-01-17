@@ -1,6 +1,7 @@
 const qrcode = require("qrcode");
 const axios = require("axios");
 const FormData = require("form-data");
+const { v4: uuidv4 } = require("uuid"); // Menggunakan UUID untuk memastikan nama file unik
 
 // Fungsi untuk mengunggah buffer ke Catbox.moe
 async function uploadBufferToCatbox(buffer, filename) {
@@ -34,8 +35,9 @@ async function uploadBufferToCatbox(buffer, filename) {
 // Fungsi untuk membuat QR Code langsung dari buffer
 const createQr = async (text) => {
   try {
+    // Menggunakan UUID untuk memastikan nama file unik
     const buffer = await qrcode.toBuffer(text, { width: 1020 });
-    const filename = `${Date.now()}.jpg`;
+    const filename = `${uuidv4()}.jpg`; // Menggunakan UUID untuk nama file yang unik
     const url = await uploadBufferToCatbox(buffer, filename);
     return { url };
   } catch (err) {
