@@ -1,51 +1,45 @@
 const express = require("express");
-const { createPaymentString, createPaymentQr } = require("../saweria.js"); // Import modul jkt48connect-saweria
 const cors = require("cors");
-const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
-const axios = require("axios");
-const app = express();
+const { createDynamicQRIS } = require("./helpers/qris-helper");
+const validateApiKey = require("../middleware/auth");
+
 const router = express.Router();
 
-// Enable CORS for all domains (or specific domains)
-app.use(cors({
-  origin: '*',
-}));
+// Enable CORS
+router.use(cors({ origin: "*" }));
 
-// Endpoint untuk membuat pembayaran
+// QRIS API Endpoint
 router.get("/", validateApiKey, async (req, res) => {
-  const { amount, username, message } = req.query; // Mendapatkan parameter amount, username, dan message dari query URL
+  const { qris, amount, includeFee, feeType, fee } = req.query;
 
-  // Pastikan amount dan username ada dalam query
-  if (!amount || !username) {
+  if (!qris || !amount) {
     return res.status(400).json({
-      message: "Parameter 'amount' dan 'username' harus disertakan.",
+      message: "Parameter 'qris' dan 'amount' harus disertakan.",
     });
   }
 
   try {
-    // Menambahkan headers khusus untuk menghindari error 403
-    const headers = {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3', 
-      'Authorization': 'Bearer JKTCONNECT', // Ganti dengan token API yang benar jika diperlukadiperluk// Ganti dengan API key Anda jika diperlukan
-  };
+    const dynamicQRIS = createDynamicQRIS(
+      qris,
+      amount,
+      includeFee === "true", // Convert string to boolean
+      feeType || "rupiah",
+      fee || "0"
+    );
 
-    // Memanggil fungsi createPaymentQr dari modul jkt48connect-saweria untuk membuat pembayaran
-    const result = await createPaymentQr(username, { 
-      amount: parseInt(amount), 
-      message, 
-      headers // Menambahkan headers ke dalam request
-    });
-
-    // Mengembalikan data hasil pembayaran dalam format JSON
     res.json({
       author: "Valzyy",
-      ...result, // Menyisipkan data hasil pembayaran langsung dari modul
+      originalQRIS: qris,
+      dynamicQRIS,
+      amount,
+      includeFee: includeFee === "true",
+      feeType,
+      fee,
     });
   } catch (error) {
-    console.error("Error creating payment:", error.message);
-    // Mengembalikan error response jika terjadi kesalahan
+    console.error("Error converting QRIS:", error.message);
     res.status(500).json({
-      message: "Gagal membuat pembayaran.",
+      message: "Gagal mengonversi QRIS.",
       error: error.message,
     });
   }
