@@ -1,10 +1,9 @@
 const express = require("express");
 const validateApiKey = require("../middleware/auth");
 const { createQr } = require("../helpers/qr");
-const { generateSignature } = require("../helpers/signature");
-const crypto = require("crypto");
 const router = express.Router();
 
+// Helper Function
 const convertCRC16 = (str) => {
   let crc = 0xffff;
   const strlen = str.length;
@@ -41,31 +40,17 @@ const createDynamicQRIS = (qris, amount, includeFee = false, feeType = "rupiah",
   return finalResult;
 };
 
-const generateRandomKey = (length = 32) => {
-  return crypto.randomBytes(length).toString("hex");
-};
-
-const generateMerchantOrderId = () => {
-  const timestamp = Date.now().toString();
-  const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, "0");
-  return `ORD${timestamp}${randomSuffix}`;
-};
-
+// Route Handler
 router.get("/", validateApiKey, async (req, res) => {
-  const { qris, amount, includeFee, feeType, fee, merchantCode } = req.query;
+  const { qris, amount, includeFee, feeType, fee } = req.query;
 
-  if (!qris || !amount || !merchantCode) {
+  if (!qris || !amount) {
     return res.status(400).json({
-      message: "Parameter 'qris', 'amount', dan 'merchantCode' harus disertakan.",
+      message: "Parameter 'qris' dan 'amount' harus disertakan.",
     });
   }
 
   try {
-    // Generate mKey and merchantOrderId automatically
-    const mKey = generateRandomKey(16);
-    const merchantOrderId = generateMerchantOrderId();
-
-    // Generate dynamic QRIS
     const dynamicQRIS = createDynamicQRIS(
       qris,
       amount,
@@ -74,10 +59,6 @@ router.get("/", validateApiKey, async (req, res) => {
       fee || "0"
     );
 
-    // Generate signature
-    const signature = generateSignature(merchantCode, merchantOrderId, amount, mKey);
-
-    // Create QR Code
     const qrResult = await createQr(dynamicQRIS);
 
     res.json({
@@ -89,9 +70,6 @@ router.get("/", validateApiKey, async (req, res) => {
       feeType,
       fee,
       qrImageUrl: qrResult.url,
-      merchantOrderId,
-      mKey,
-      signature,
     });
   } catch (error) {
     console.error("Error creating dynamic QRIS:", error.message);
