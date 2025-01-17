@@ -26,6 +26,7 @@
     "qris-dinamis": "^1.0.2",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0",
+    "crypto": "^1.0.1",
     "qrcode": "^1.5.4",
     "random-user": "^2.0.2",
     "saweria": "^2.0.1"
