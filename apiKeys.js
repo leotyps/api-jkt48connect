@@ -9,10 +9,10 @@ const apiKeys = {
     lastAccessDate: "2024-11-20",
     seller: true,
   },
-  "ASU": {
+  "zlfdimari8727": {
     expiryDate: "unli",
-    remainingRequests: 50,
-    maxRequests: 50,
+    remainingRequests: 250,
+    maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
   "fikzz123": {
