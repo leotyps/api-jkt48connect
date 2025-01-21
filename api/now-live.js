@@ -19,22 +19,8 @@ router.get("/", validateApiKey, async (req, res) => {
     const response = await axios.get(`https://api.crstlnz.my.id/api/now_live?group=${group}`);
     const liveData = response.data;
 
-    // Proses setiap item di data utama (berbasis objek)
-    Object.keys(liveData).forEach(key => {
-      if (liveData[key].streaming_url_list && Array.isArray(liveData[key].streaming_url_list)) {
-        // Tambahkan properti "jkt48connect" di setiap item dalam streaming_url_list
-        liveData[key].streaming_url_list = liveData[key].streaming_url_list.map(item => ({
-          ...item,
-          jkt48connect: `https://www.jkt48connect.my.id/live?stream_url=${encodeURIComponent(item.url)}&name=${encodeURIComponent(liveData[key].name)}`
-        }));
-      }
-    });
-
-    // Kembalikan data yang sudah dimodifikasi
-    res.json({
-      ...liveData,
-      author: "Valzyy", // Tambahkan properti author
-    });
+    // Kembalikan data langsung tanpa modifikasi
+    res.json(liveData);
   } catch (error) {
     console.error(`Error fetching live data for group ${group}:`, error.message);
 
