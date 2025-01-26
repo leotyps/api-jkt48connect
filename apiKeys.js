@@ -15,7 +15,7 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
-  "buy-mami": {
+  "J48-Mami": {
     expiryDate: "unli",
     remainingRequests: 250,
     maxRequests: 250,
