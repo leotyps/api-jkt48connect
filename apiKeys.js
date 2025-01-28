@@ -8,6 +8,7 @@ const apiKeys = {
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
     seller: true,
+    premium: true,
   },
   "zlfdimari8727": {
     expiryDate: "unli",
