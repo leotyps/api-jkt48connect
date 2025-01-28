@@ -22,6 +22,7 @@ const orkutStatus = require("../api2/orkut-status");
 const birthday = require("../api2/birthday");
 const mongodb = require("../api2/mongodb");
 const tiktok = require("../api2/tiktok");
+const brat = require("../api2/brat");
 
 //Cors
 app.use(cors({
@@ -46,6 +47,7 @@ app.use("/api/", mongodb);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
 app.use("/api", birthday);
+app.use("/api/brat", brat);
 app.use("/api/downloader/tiktok", tiktok);
 app.use("/api/orkut/createpayment", createPayment);
 app.use("/api/orkut/cekstatus", orkutStatus);
