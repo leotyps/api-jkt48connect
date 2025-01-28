@@ -56,6 +56,8 @@ const apiKeys = {
     remainingRequests: 50,
     maxRequests: 50,
     lastAccessDate: "2024-11-20",
+    seller: true,
+    premium: true,
   },
   "J48-2E9D4B7C": {
     expiryDate: "unli",
