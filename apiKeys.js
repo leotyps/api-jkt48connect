@@ -21,6 +21,8 @@ const apiKeys = {
     remainingRequests: 250,
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
+    premium: true,
+    seller: true,
   },
   "fikzz123": {
     expiryDate: "unli",
@@ -34,12 +36,14 @@ const apiKeys = {
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
     seller: true,
+    premium: true,
   },
   "MarshaLenathea1234567890": {
     expiryDate: "unli", // Tidak terbatas
     remainingRequests: 250, // Tidak terbatas
     maxRequests: 250, // Tidak terbatas
     lastAccessDate: "2024-11-20",
+    premium: true,
   },
   "JKT-4F5C3D8A": {
     expiryDate: "unli",
