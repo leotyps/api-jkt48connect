@@ -46,7 +46,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
   if (!keyData) {
     return res.status(403).json({
       success: false,
-      message: "API key tidak valid. Silakan beli API key di WhatsApp 6285701479245 atau wa.me/6285701479245.",
+      message: "API key tidak aktif. Silakan aktivasi apiKey terlebih di WhatsApp 6285701479245 atau chatbox pada Dashboard.",
     });
   }
 
@@ -77,6 +77,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
       remaining_requests: "∞", // Limit tak terbatas
       max_requests: "∞", // Limit tak terbatas
       seller: keyData.seller || false, // Kembalikan informasi seller
+      premium: keyData.premium || false, // Kembalikan informasi seller
     });
   }
 
@@ -95,6 +96,7 @@ router.get("/check-apikey/:api_key", (req, res) => {
     remaining_requests: keyData.remainingRequests, // Sisa request
     max_requests: keyData.maxRequests === "-" ? "∞" : keyData.maxRequests, // Limit maksimum
     seller: keyData.seller || false, // Kembalikan informasi seller
+    premium: keyData.premium || false,
   });
 });
 
