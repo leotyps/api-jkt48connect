@@ -1,7 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-const validateApiKey = require("../middleware/auth"); // Middleware validasi API key
+const validateApiKey = require("../middleware/premium"); // Middleware validasi API key
 const app = express();
 const router = express.Router();
 
