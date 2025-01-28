@@ -21,8 +21,6 @@ const apiKeys = {
     remainingRequests: 250,
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
-    premium: true,
-    seller: true,
   },
   "fikzz123": {
     expiryDate: "unli",
