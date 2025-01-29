@@ -7,8 +7,8 @@ const apiKeys = {
     remainingRequests: "∞", // Tidak terbatas
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
-    seller: true,
     premium: true,
+    seller: true,
   },
   "zlfdinhere88246": {
     expiryDate: "unli",
