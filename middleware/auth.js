@@ -1,16 +1,4 @@
-const fs = require("fs");
-const path = require("path");
-const apiKeysPath = path.join(__dirname, "../apiKeys.js");
-
-// Load apiKeys.js sebagai objek
 const apiKeys = require("../apiKeys");
-
-// Fungsi untuk menyimpan perubahan ke dalam file apiKeys.js
-function saveApiKeys() {
-  const fileContent =
-    `module.exports = ` + JSON.stringify(apiKeys, null, 2).replace(/\"([^(\")]+)\":/g, "$1:");
-  fs.writeFileSync(apiKeysPath, fileContent, "utf8");
-}
 
 function validateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
@@ -32,10 +20,8 @@ function validateApiKey(req, res, next) {
   }
 
   const now = new Date();
-  const currentDate = now.getDate(); // Ambil tanggal hari ini
-  const resetDates = [5, 10, 15, 20, 25, 30]; // Tanggal reset
 
-  // Periksa apakah API key memiliki masa berlaku dan belum kedaluwarsa
+  // Periksa apakah API key sudah kedaluwarsa (kecuali jika "unli")
   if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > new Date(keyData.expiryDate)) {
     return res.status(403).json({
       success: false,
@@ -43,15 +29,9 @@ function validateApiKey(req, res, next) {
     });
   }
 
-  // Reset limit request jika hari ini adalah salah satu dari tanggal reset
-  if (resetDates.includes(currentDate)) {
-    keyData.remainingRequests = keyData.maxRequests === "-" ? "∞" : keyData.maxRequests; // Reset ke limit maksimum jika tidak terbatas
-    saveApiKeys(); // Simpan perubahan ke dalam file
-  }
-
-  // Jika limit tidak terbatas, lanjutkan tanpa pengurangan request
+  // Periksa limit request (∞ jika tak terbatas)
   if (keyData.remainingRequests === "∞") {
-    return next();
+    return next(); // Lanjutkan jika limit tidak terbatas
   }
 
   // Validasi limit request
@@ -62,9 +42,8 @@ function validateApiKey(req, res, next) {
     });
   }
 
-  // Kurangi jumlah request yang tersisa dan simpan perubahan
+  // Kurangi jumlah request yang tersisa
   keyData.remainingRequests -= 1;
-  saveApiKeys();
 
   next();
 }
