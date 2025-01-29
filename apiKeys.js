@@ -10,7 +10,7 @@ const apiKeys = {
     seller: true,
     premium: true,
   },
-  "zlfdimari8727": {
+  "zlfdimari87275": {
     expiryDate: "unli",
     remainingRequests: 250,
     maxRequests: 250,
@@ -22,7 +22,7 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
-  "fikzz123": {
+  "fikznotsazx2": {
     expiryDate: "unli",
     remainingRequests: 150,
     maxRequests: 150,
