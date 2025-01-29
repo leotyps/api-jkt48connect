@@ -28,14 +28,6 @@ const apiKeys = {
     maxRequests: 150,
     lastAccessDate: "2024-11-20",
   },
-  "SazxOfficial111": {
-    expiryDate: "unli", // Tidak terbatas
-    remainingRequests: "∞", // Tidak terbatas
-    maxRequests: "∞", // Tidak terbatas
-    lastAccessDate: "2024-11-20",
-    seller: true,
-    premium: true,
-  },
   "MarshaLenathea1234567890": {
     expiryDate: "unli", // Tidak terbatas
     remainingRequests: 250, // Tidak terbatas
