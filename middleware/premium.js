@@ -27,10 +27,11 @@ function validateApiKey(req, res, next) {
     });
   }
 
-  const now = new Date();
-  const today = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+const now = new Date();
+  const currentDate = now.getDate(); // Ambil tanggal hari ini
+  const resetDates = [5, 10, 15, 20, 25, 30]; // Tanggal reset
 
-  // Periksa apakah expiryDate = "unli", yang berarti tidak terbatas
+  // Periksa apakah API key memiliki masa berlaku dan belum kedaluwarsa
   if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > keyData.expiryDate) {
     return res.status(403).json({
       success: false,
@@ -38,12 +39,11 @@ function validateApiKey(req, res, next) {
     });
   }
 
-  // Reset limit request jika hari terakhir berbeda dari hari ini
-  if (keyData.lastAccessDate !== today) {
+  // Reset limit request jika hari ini adalah salah satu dari tanggal reset
+  if (resetDates.includes(currentDate)) {
     keyData.remainingRequests = keyData.maxRequests === "-" ? "∞" : keyData.maxRequests; // Reset ke limit maksimum jika tidak terbatas
-    keyData.lastAccessDate = today; // Update tanggal terakhir akses
   }
-
+  
   // Periksa limit request (∞ jika tak terbatas)
   if (keyData.remainingRequests === "∞") {
     // Jika limit tidak terbatas, lanjutkan tanpa pengurangan request
