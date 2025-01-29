@@ -5,10 +5,8 @@ const validateApiKey = require("../middleware/auth"); // Import middleware valid
 const app = express();
 const router = express.Router();
 
-// Enable CORS for all domains (or specific domains)
-app.use(cors({
-  origin: "*",
-}));
+// Enable CORS for all domains
+app.use(cors({ origin: "*" }));
 
 // Fungsi untuk format angka ke mata uang Rupiah
 function formatRupiah(amount) {
@@ -25,27 +23,18 @@ router.get("/", validateApiKey, async (req, res) => {
     const recentData = response.data;
 
     // Modifikasi data untuk menambahkan total gift dalam format Rupiah
-    const modifiedRecents = recentData.recents.map((item) => {
-      const totalGiftIDR = item.gift_rate * item.points; // Hitung total gift
-      return {
-        ...item,
-        total_gift: formatRupiah(totalGiftIDR), // Tambahkan total gift dalam format Rupiah
-      };
-    });
+    const modifiedRecents = recentData.recents.map((item) => ({
+      ...item,
+      total_gift: formatRupiah(item.gift_rate * item.points), // Hitung dan tambahkan total gift dalam format Rupiah
+    }));
 
-    // Menambahkan author ke dalam respons
-    res.json({
-      ...modifiedRecents,
-    });
+    // Hanya mengembalikan array modifiedRecents tanpa tambahan teks
+    res.json(modifiedRecents);
   } catch (error) {
     console.error(`Error fetching recent data for group ${group}:`, error.message);
 
-    // Mengembalikan error response jika terjadi kesalahan
-    res.status(500).json({
-      author: "Valzyy",
-      message: `Gagal mengambil data recent untuk grup ${group}.`,
-      error: error.message,
-    });
+    // Jika terjadi error, tetap kembalikan array kosong agar format respons tetap konsisten
+    res.status(500).json([]);
   }
 });
 
