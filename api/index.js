@@ -23,6 +23,7 @@ const birthday = require("../api2/birthday");
 const mongodb = require("../api2/mongodb");
 const tiktok = require("../api2/tiktok");
 const brat = require("../api2/brat");
+const allapi = require("../api2/all-apikeys");
 
 //Cors
 app.use(cors({
@@ -46,6 +47,7 @@ app.use("/api/recent", lastLive);
 app.use("/api/", mongodb);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
+app.use("/api", allapi);
 app.use("/api", birthday);
 app.use("/api/brat", brat);
 app.use("/api/downloader/tiktok", tiktok);
