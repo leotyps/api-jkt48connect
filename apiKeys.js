@@ -101,6 +101,7 @@ async function syncApiKeysWithDatabase() {
         maxRequests: row.max_requests,
         lastAccessDate: row.last_access_date,
         seller: row.seller || false,
+        premium: row.premium || false,  // Tambahkan kolom premium
       };
       return acc;
     }, {});
@@ -110,8 +111,8 @@ async function syncApiKeysWithDatabase() {
       if (!dbApiKeys[apiKey]) {
         // Tambahkan API key baru jika belum ada di database
         await dbClient.query(
-          `INSERT INTO api_keys (api_key, expiry_date, remaining_requests, max_requests, last_access_date, seller) 
-           VALUES ($1, $2, $3, $4, $5, $6)`,
+          `INSERT INTO api_keys (api_key, expiry_date, remaining_requests, max_requests, last_access_date, seller, premium) 
+           VALUES ($1, $2, $3, $4, $5, $6, $7)`,
           [
             apiKey,
             data.expiryDate,
@@ -119,6 +120,7 @@ async function syncApiKeysWithDatabase() {
             data.maxRequests,
             data.lastAccessDate,
             data.seller || false,
+            data.premium || false,  // Simpan nilai premium
           ]
         );
         console.log(`API key ${apiKey} added to database.`);
@@ -130,11 +132,12 @@ async function syncApiKeysWithDatabase() {
           dbData.remainingRequests !== data.remainingRequests ||
           dbData.maxRequests !== data.maxRequests ||
           dbData.lastAccessDate !== data.lastAccessDate ||
-          dbData.seller !== (data.seller || false)
+          dbData.seller !== (data.seller || false) ||
+          dbData.premium !== (data.premium || false)  // Cek perubahan premium
         ) {
           await dbClient.query(
             `UPDATE api_keys 
-             SET expiry_date = $2, remaining_requests = $3, max_requests = $4, last_access_date = $5, seller = $6 
+             SET expiry_date = $2, remaining_requests = $3, max_requests = $4, last_access_date = $5, seller = $6, premium = $7
              WHERE api_key = $1`,
             [
               apiKey,
@@ -143,6 +146,7 @@ async function syncApiKeysWithDatabase() {
               data.maxRequests,
               data.lastAccessDate,
               data.seller || false,
+              data.premium || false,  // Update nilai premium
             ]
           );
           console.log(`API key ${apiKey} updated in database.`);
