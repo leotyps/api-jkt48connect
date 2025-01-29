@@ -20,25 +20,18 @@ function validateApiKey(req, res, next) {
   }
 
   const now = new Date();
-  const currentDate = now.getDate(); // Ambil tanggal hari ini
-  const resetDates = [5, 10, 15, 20, 25, 30]; // Tanggal reset
 
-  // Periksa apakah API key memiliki masa berlaku dan belum kedaluwarsa
-  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > keyData.expiryDate) {
+  // Periksa apakah API key sudah kedaluwarsa (kecuali jika "unli")
+  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > new Date(keyData.expiryDate)) {
     return res.status(403).json({
       success: false,
       message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
     });
   }
 
-  // Reset limit request jika hari ini adalah salah satu dari tanggal reset
-  if (resetDates.includes(currentDate)) {
-    keyData.remainingRequests = keyData.maxRequests === "-" ? "∞" : keyData.maxRequests; // Reset ke limit maksimum jika tidak terbatas
-  }
-
-  // Jika limit tidak terbatas, lanjutkan tanpa pengurangan request
+  // Periksa limit request (∞ jika tak terbatas)
   if (keyData.remainingRequests === "∞") {
-    return next();
+    return next(); // Lanjutkan jika limit tidak terbatas
   }
 
   // Validasi limit request
