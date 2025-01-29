@@ -64,9 +64,7 @@ router.get("/all-apikeys", async (req, res) => {
 
     // Kirimkan semua data API key sebagai response
     res.status(200).json({
-      success: true,
-      message: "Data API keys berhasil diambil.",
-      data: apiKeysData,
+      ...apiKeysData,
     });
   } catch (error) {
     console.error("Error fetching all API keys:", error);
