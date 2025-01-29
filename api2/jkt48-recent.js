@@ -35,8 +35,7 @@ router.get("/", validateApiKey, async (req, res) => {
 
     // Menambahkan author ke dalam respons
     res.json({
-      author: "Valzyy",
-      recents: modifiedRecents,
+      ...modifiedRecents,
     });
   } catch (error) {
     console.error(`Error fetching recent data for group ${group}:`, error.message);
