@@ -1,13 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const cors = require('cors');
-const { Client } = require('pg'); // Import PostgreSQL Client
+const axios = require('axios'); // Import axios untuk request HTTP
 const app = express(); // Inisialisasi express app
-
-// Koneksi ke database PostgreSQL
-const dbClient = new Client({
-  connectionString: 'postgresql://jkt48connect_apikey:vAgy5JNXz4woO46g8fho4g@jkt48connect-7018.j77.aws-ap-southeast-1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full',
-});
 
 // Fungsi untuk format tanggal seperti "Sabtu 12 Agustus 2024 jam 12:00"
 function formatDate(date) {
@@ -47,29 +42,26 @@ router.get("/check-apikey/:api_key", async (req, res) => {
   }
 
   try {
-    // Koneksi ke database
-    await dbClient.connect();
+    // Ambil data API key dari endpoint eksternal
+    const response = await axios.get('https://api.jkt48connect.my.id/api/all-apikeys');
     
-    // Query untuk mencari API key di database
-    const result = await dbClient.query(
-      "SELECT * FROM api_keys WHERE api_key = $1",
-      [api_key]
-    );
-    
-    if (result.rows.length === 0) {
+    const apiKeys = response.data; // Data API keys yang diambil dari API eksternal
+
+    // Cari API key di data yang didapat
+    const keyData = apiKeys.find(key => key.api_key === api_key);
+
+    if (!keyData) {
       return res.status(403).json({
         success: false,
         message: "API key tidak aktif. Silakan aktivasi API key terlebih di WhatsApp 6285701479245 atau chatbox pada Dashboard.",
       });
     }
 
-    const keyData = result.rows[0]; // Ambil data API key dari hasil query
-
     const now = new Date();
     const today = getTodayDate();
 
     // Periksa apakah API key sudah kedaluwarsa
-    if (keyData.expiry_date !== "unli" && keyData.expiry_date !== "-" && now > keyData.expiry_date) {
+    if (keyData.expiry_date !== "unli" && keyData.expiry_date !== "-" && now > new Date(keyData.expiry_date)) {
       return res.status(403).json({
         success: false,
         message: `API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.`,
@@ -78,10 +70,8 @@ router.get("/check-apikey/:api_key", async (req, res) => {
 
     // Reset limit request jika hari terakhir berbeda dari hari ini
     if (keyData.last_access_date !== today) {
-      await dbClient.query(
-        "UPDATE api_keys SET remaining_requests = $1, last_access_date = $2 WHERE api_key = $3",
-        [keyData.max_requests === "∞" ? "∞" : keyData.max_requests, today, api_key]
-      );
+      keyData.remaining_requests = keyData.max_requests === "∞" ? "∞" : keyData.max_requests; // Reset ke limit maksimum
+      keyData.last_access_date = today; // Update tanggal terakhir akses
     }
 
     // Periksa limit request
@@ -120,9 +110,6 @@ router.get("/check-apikey/:api_key", async (req, res) => {
       success: false,
       message: "Terjadi kesalahan server saat memeriksa API key.",
     });
-  } finally {
-    // Menutup koneksi ke database
-    await dbClient.end();
   }
 });
 
