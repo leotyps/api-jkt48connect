@@ -6,23 +6,31 @@ const apiKeys = {
     remainingRequests: "∞", // Tidak terbatas
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
+    seller: true,
+    premium: true,
   },
-  "J48-9F2A7B1D": {
+  "zlfdinhere88246": {
     expiryDate: "unli",
-    remainingRequests: 50,
-    maxRequests: 50,
+    remainingRequests: 250,
+    maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
-  "fikzz123": {
+  "liaa123": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2024-11-20",
+  },
+  "J48-Mami": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2024-11-20",
+  },
+  "fikznotsazx2": {
     expiryDate: "unli",
     remainingRequests: 150,
     maxRequests: 150,
-    lastAccessDate: "2024-11-20",
-  },
-  "SazxOfficial111": {
-    expiryDate: "unli", // Tidak terbatas
-    remainingRequests: "∞", // Tidak terbatas
-    maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
   },
   "MarshaLenathea1234567890": {
@@ -30,6 +38,7 @@ const apiKeys = {
     remainingRequests: 250, // Tidak terbatas
     maxRequests: 250, // Tidak terbatas
     lastAccessDate: "2024-11-20",
+    premium: true,
   },
   "JKT-4F5C3D8A": {
     expiryDate: "unli",
@@ -42,6 +51,8 @@ const apiKeys = {
     remainingRequests: 50,
     maxRequests: 50,
     lastAccessDate: "2024-11-20",
+    seller: true,
+    premium: true,
   },
   "J48-2E9D4B7C": {
     expiryDate: "unli",
@@ -68,5 +79,4 @@ const apiKeys = {
     lastAccessDate: "2024-11-20",
   },
 };
-
 module.exports = apiKeys;
