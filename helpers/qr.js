@@ -1,29 +1,33 @@
 const qrcode = require("qrcode");
-const { fromBuffer } = require("file-type");
+const axios = require("axios");
 const FormData = require("form-data");
 const { v4: uuidv4 } = require("uuid"); // Menggunakan UUID untuk memastikan nama file unik
 
-// Fungsi untuk mengunggah buffer ke Meitang CDN
-async function uploadBufferToMeitang(buffer) {
+// Fungsi untuk mengunggah buffer ke https://8030.us.kg/
+async function uploadBufferTo8030(buffer, filename) {
   try {
-    const { ext } = await fromBuffer(buffer); // Mendapatkan ekstensi dari buffer
-    let form = new FormData();
-    form.append("file", buffer, "tmp." + ext); // Menambahkan buffer dan ekstensi file
-
-    const response = await fetch("https://cdn.meitang.xyz/upload", {
-      method: "POST",
-      body: form,
+    const form = new FormData();
+    form.append("file", buffer, {
+      filename,
+      contentType: "image/jpeg",
     });
 
-    const data = await response.json();
+    const response = await axios({
+      url: "https://8030.us.kg/upload",
+      method: "POST",
+      headers: {
+        ...form.getHeaders(),
+      },
+      data: form,
+    });
 
-    if (!response.ok) {
-      throw new Error(data.error || "Failed to upload file");
+    if (response.data && response.data.url) {
+      return response.data.url;
+    } else {
+      throw new Error("Unexpected API response structure");
     }
-
-    return data.file.url; // Mengembalikan URL file yang diupload
   } catch (err) {
-    throw new Error(`Failed to upload to Meitang CDN: ${err.message}`);
+    throw new Error(`Failed to upload to 8030.us.kg: ${err.message}`);
   }
 }
 
@@ -32,7 +36,8 @@ const createQr = async (text) => {
   try {
     // Menggunakan UUID untuk memastikan nama file unik
     const buffer = await qrcode.toBuffer(text, { width: 1020 });
-    const url = await uploadBufferToMeitang(buffer); // Mengupload buffer ke Meitang CDN
+    const filename = `${uuidv4()}.jpg`; // Menggunakan UUID untuk nama file yang unik
+    const url = await uploadBufferTo8030(buffer, filename);
     return { url };
   } catch (err) {
     console.error("Error creating QR code:", err);
