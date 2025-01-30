@@ -65,6 +65,7 @@ const apiKeys = {
     remainingRequests: 150,
     maxRequests: 150,
     lastAccessDate: "2024-11-20",
+    premium: true,
   },
   "ForxFyyre": {
     expiryDate: parseCustomDate("21/11/2024/18:15"),
