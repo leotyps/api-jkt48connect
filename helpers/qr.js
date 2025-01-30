@@ -1,32 +1,31 @@
 const qrcode = require("qrcode");
 const axios = require("axios");
-const FormData = require("form-data");
 const { v4: uuidv4 } = require("uuid"); // Menggunakan UUID untuk memastikan nama file unik
 
-// Fungsi untuk mengunggah buffer ke tmpfiles.org
-async function tmpFiles(buffer) {
-  return new Promise(async (resolve, reject) => {
-    // Menentukan ekstensi dan tipe MIME secara manual berdasarkan format buffer (JPEG)
-    const ext = 'jpg';
-    const mime = 'image/jpeg';
+// API Key imgBB yang didapat setelah registrasi
+const imgbbApiKey = "daf2a6199bf1bba1b41bd56127359bba"; // Ganti dengan API key Anda
 
+// Fungsi untuk mengunggah buffer ke imgBB
+async function uploadBufferToImgBB(buffer, filename) {
+  try {
     const form = new FormData();
-    form.append('file', buffer, {
-      filename: new Date() * 1 + '.' + ext,
-      contentType: mime
+    form.append("image", buffer, filename);
+
+    const response = await axios({
+      url: "https://api.imgbb.com/1/upload?key=" + imgbbApiKey,
+      method: "POST",
+      headers: form.getHeaders(),
+      data: form,
     });
 
-    try {
-      const { data } = await axios.post("https://tmpfiles.org/api/v1/upload", form, {
-        headers: {
-          ...form.getHeaders(),
-        },
-      });
-      resolve(data);
-    } catch (e) {
-      reject(e?.response || e);
+    if (response.data && response.data.data && response.data.data.url) {
+      return response.data.data.url; // URL gambar setelah diupload
+    } else {
+      throw new Error("Unexpected API response structure");
     }
-  });
+  } catch (err) {
+    throw new Error(`Failed to upload to imgBB: ${err.message}`);
+  }
 }
 
 // Fungsi untuk membuat QR Code langsung dari buffer
@@ -34,8 +33,9 @@ const createQr = async (text) => {
   try {
     // Menggunakan UUID untuk memastikan nama file unik
     const buffer = await qrcode.toBuffer(text, { width: 1020 });
-    const data = await tmpFiles(buffer); // Menggunakan tmpFiles untuk upload buffer
-    return { url: data.url }; // Menyimpan URL dari tmpfiles
+    const filename = `${uuidv4()}.jpg`; // Menggunakan UUID untuk nama file yang unik
+    const url = await uploadBufferToImgBB(buffer, filename);
+    return { url }; // Mengembalikan URL gambar
   } catch (err) {
     console.error("Error creating QR code:", err);
     throw err;
