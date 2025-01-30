@@ -1,44 +1,34 @@
 const qrcode = require("qrcode");
 const axios = require("axios");
 const FormData = require("form-data");
-const { v4: uuidv4 } = require("uuid"); // Menggunakan UUID untuk memastikan nama file unik
+const { v4: uuidv4 } = require("uuid"); // Untuk nama file unik
 
-// Fungsi untuk mengunggah buffer ke Catbox.moe
-async function uploadBufferToCatbox(buffer, filename) {
+// Fungsi untuk mengunggah buffer ke GoFile.io
+async function uploadBufferToGoFile(buffer, filename) {
   try {
     const form = new FormData();
-    form.append("reqtype", "fileupload");
-    form.append("fileToUpload", buffer, {
-      filename,
-      contentType: "image/jpeg",
+    form.append("file", buffer, { filename });
+
+    const response = await axios.post("https://store1.gofile.io/uploadFile", form, {
+      headers: { ...form.getHeaders() },
     });
 
-    const response = await axios({
-      url: "https://catbox.moe/user/api.php",
-      method: "POST",
-      headers: {
-        ...form.getHeaders(),
-      },
-      data: form,
-    });
-
-    if (response.data) {
-      return response.data;
+    if (response.data.status === "ok") {
+      return response.data.data.downloadPage;
     } else {
       throw new Error("Unexpected API response structure");
     }
   } catch (err) {
-    throw new Error(`Failed to upload to Catbox: ${err.message}`);
+    throw new Error(`Failed to upload to GoFile: ${err.message}`);
   }
 }
 
 // Fungsi untuk membuat QR Code langsung dari buffer
 const createQr = async (text) => {
   try {
-    // Menggunakan UUID untuk memastikan nama file unik
     const buffer = await qrcode.toBuffer(text, { width: 1020 });
-    const filename = `${uuidv4()}.jpg`; // Menggunakan UUID untuk nama file yang unik
-    const url = await uploadBufferToCatbox(buffer, filename);
+    const filename = `${uuidv4()}.jpg`; // Nama file unik
+    const url = await uploadBufferToGoFile(buffer, filename);
     return { url };
   } catch (err) {
     console.error("Error creating QR code:", err);
