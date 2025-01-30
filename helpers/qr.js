@@ -1,5 +1,6 @@
 const qrcode = require("qrcode");
 const axios = require("axios");
+const FormData = require("form-data");
 const { v4: uuidv4 } = require("uuid"); // Menggunakan UUID untuk memastikan nama file unik
 
 // API Key imgBB yang didapat setelah registrasi
@@ -9,10 +10,16 @@ const imgbbApiKey = "daf2a6199bf1bba1b41bd56127359bba"; // Ganti dengan API key 
 async function uploadBufferToImgBB(buffer, filename) {
   try {
     const form = new FormData();
-    form.append("image", buffer, filename);
+    
+    // Mengkonversi buffer menjadi stream agar bisa diupload dengan FormData
+    const stream = require("stream");
+    const bufferStream = new stream.PassThrough();
+    bufferStream.end(buffer);
+
+    form.append("image", bufferStream, { filename });
 
     const response = await axios({
-      url: "https://api.imgbb.com/1/upload?key=" + imgbbApiKey,
+      url: `https://api.imgbb.com/1/upload?key=${imgbbApiKey}`,
       method: "POST",
       headers: form.getHeaders(),
       data: form,
