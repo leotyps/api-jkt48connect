@@ -1,34 +1,38 @@
 const qrcode = require("qrcode");
-const axios = require("axios");
+const { fromBuffer } = require("file-type");
 const FormData = require("form-data");
-const { v4: uuidv4 } = require("uuid"); // Untuk nama file unik
+const { v4: uuidv4 } = require("uuid"); // Menggunakan UUID untuk memastikan nama file unik
 
-// Fungsi untuk mengunggah buffer ke GoFile.io
-async function uploadBufferToGoFile(buffer, filename) {
+// Fungsi untuk mengunggah buffer ke Meitang CDN
+async function uploadBufferToMeitang(buffer) {
   try {
-    const form = new FormData();
-    form.append("file", buffer, { filename });
+    const { ext } = await fromBuffer(buffer); // Mendapatkan ekstensi dari buffer
+    let form = new FormData();
+    form.append("file", buffer, "tmp." + ext); // Menambahkan buffer dan ekstensi file
 
-    const response = await axios.post("https://store1.gofile.io/uploadFile", form, {
-      headers: { ...form.getHeaders() },
+    const response = await fetch("https://cdn.meitang.xyz/upload", {
+      method: "POST",
+      body: form,
     });
 
-    if (response.data.status === "ok") {
-      return response.data.data.downloadPage;
-    } else {
-      throw new Error("Unexpected API response structure");
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to upload file");
     }
+
+    return data.file.url; // Mengembalikan URL file yang diupload
   } catch (err) {
-    throw new Error(`Failed to upload to GoFile: ${err.message}`);
+    throw new Error(`Failed to upload to Meitang CDN: ${err.message}`);
   }
 }
 
 // Fungsi untuk membuat QR Code langsung dari buffer
 const createQr = async (text) => {
   try {
+    // Menggunakan UUID untuk memastikan nama file unik
     const buffer = await qrcode.toBuffer(text, { width: 1020 });
-    const filename = `${uuidv4()}.jpg`; // Nama file unik
-    const url = await uploadBufferToGoFile(buffer, filename);
+    const url = await uploadBufferToMeitang(buffer); // Mengupload buffer ke Meitang CDN
     return { url };
   } catch (err) {
     console.error("Error creating QR code:", err);
