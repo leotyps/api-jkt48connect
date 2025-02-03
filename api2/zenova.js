@@ -1,84 +1,85 @@
 const express = require("express");
 const cors = require("cors");
-const LlamaAI = require("llamaai");
-const validateApiKey = require("../middleware/auth"); // Middleware validasi API key, tidak diubah
-const serverless = require("serverless-http");
-
-// Buat router Express
+const validateApiKey = require("../middleware/auth"); // Middleware for API key validation
+const LlamaAI = require("llamaai"); // Import the llamaai module
+const fs = require("fs");
+const app = express();
 const router = express.Router();
 
-// Inisialisasi LlamaAI dengan API token dari environment variable
+// Initialize the LlamaAI client with your API token
 const apiToken = 'LA-a9d86fbebb1846a88a02e914376480c87b44d18ae8474413ba17e7162376371e'; // Ganti dengan token API Anda
 const llamaAPI = new LlamaAI(apiToken);
 
-// Endpoint untuk memproses query AI secara realtime
-router.get("/", validateApiKey, async (req, res) => {
-  const query = req.query.q || "hallo";
+// Enable CORS
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
-  // Siapkan pesan untuk LlamaAPI, dengan pesan sistem yang menyatakan bahwa AI bernama Zenova AI
-  const messages = [
-    {
-      role: "system",
-      content: "Zenova AI: Assistant is a large language model trained by OpenAI."
-    },
-    {
-      role: "user",
-      content: query
-    }
-  ];
+// Middleware to parse JSON request bodies
+app.use(express.json({ limit: '10mb' })); // Adjust the limit as needed
 
-  // Bangun objek request sesuai dengan dokumentasi llamaai
-  const apiRequestJson = {
-    model: "llama3.2-90b-vision",
-    messages,
-    stream: true // Aktifkan streaming untuk respon realtime
-    // Parameter tambahan (misalnya: max_tokens, temperature) dapat ditambahkan jika diperlukan
-  };
+// Endpoint for processing user messages and images
+router.post("/", validateApiKey, async (req, res) => {
+  const userMessage = req.query.chat;
+  const imageBase64 = req.query.image;
 
   try {
-    // Eksekusi request ke LlamaAPI
-    const stream = await llamaAPI.run(apiRequestJson);
+    // Load the Llama 3.2-90B-Vision model
+    const model = await llamaAPI.loadModel("llama3.2-90b-vision");
 
-    // Set header untuk streaming (Event Stream)
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
+    // Define the system role for the AI
+    const systemMessage = {
+      role: "system",
+      content: "Assistant is a large language model trained by OpenAI.",
+    };
 
-    // Streaming data secara realtime ke client
-    stream.on("data", (chunk) => {
-      res.write(chunk);
-    });
+    // Prepare the messages array
+    const messages = [systemMessage];
 
-    stream.on("end", () => {
-      res.end();
-    });
+    // If there's a user message, add it to the messages array
+    if (userMessage) {
+      messages.push({
+        role: "user",
+        content: userMessage,
+      });
+    }
 
-    stream.on("error", (error) => {
-      console.error("Error streaming AI response:", error.message);
-      if (!res.headersSent) {
-        res.status(500).json({
-          success: false,
-          message: `Gagal memproses query ${query}.`,
-          error: error.message,
-        });
-      } else {
-        res.end();
-      }
+    // If there's an image, process it
+    if (imageBase64) {
+      const imageBuffer = Buffer.from(imageBase64, "base64");
+
+      // Save the image to a temporary file
+      const imagePath = "/tmp/uploaded_image.jpg";
+      fs.writeFileSync(imagePath, imageBuffer);
+
+      // Add the image to the user message
+      messages.push({
+        role: "user",
+        content: "Please analyze the attached image.",
+        images: [imagePath],
+      });
+    }
+
+    // Generate the AI's response
+    const response = await model.chat(messages);
+
+    // Send the AI's response back to the client
+    res.json({
+      success: true,
+      message: response,
     });
   } catch (error) {
-    console.error("Error processing AI query:", error.message);
+    console.error("Error processing request with AI:", error.message);
+
+    // Return an error response if something goes wrong
     res.status(500).json({
       success: false,
-      message: `Gagal memproses query ${query}.`,
+      message: "Failed to process the request with AI.",
       error: error.message,
     });
   }
 });
 
-// Buat instance Express app dan gunakan router
-const app = express();
-app.use(cors({ origin: "*" }));
-app.use("/", router);
-
-// Ekspor handler serverless agar kompatibel dengan Vercel
-module.exports = serverless(app);
+module.exports = router;
