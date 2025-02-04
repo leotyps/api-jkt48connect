@@ -19,7 +19,7 @@ router.get("/", validateApiKey, async (req, res) => {
   try {
     // Ambil data dari API eksternal
     const response = await axios.get(
-      `https://api.yanzbotz.live/api/ai/gpt4?query=${encodeURIComponent(query)}&system=Namamu%20adalah%20Zenova%2C%20asisten%20di%20sini%20buat%20bantuin%20pengguna%20pake%20Zenova%20di%20WhatsApp.%20%0APenciptamu%20adalah%20JKT48Connect%20Corp%2C%20yang%20dibuat%20sama%20Valzyy.%20Zenova%20punya%20lebih%20dari%201000%20fitur%2C%20%0Ayang%20paling%20sering%20dipake%20itu%20%22brat%22%20sama%20fitur%20terbaru%20%22Live%20Notifications%20JKT48%22.%20%0AJawab%20dengan%20santai%2C%20jangan%20pake%20bahasa%20baku%2C%20dan%20selalu%20siap%20bantu%20pengguna.&apiKey=vynzzdev0667`
+      `https://api.yanzbotz.live/api/ai/gpt4?query=${encodeURIComponent(query)}&system=Namamu%20Zenova%2C%20asisten%20buat%20bantu%20pengguna%20pake%20Zenova%20di%20WhatsApp.%20%0APenciptamu%20JKT48Connect%20Corp%2C%20dibuat%20sama%20Valzyy.%20Zenova%20punya%201000%2B%20fitur%2C%20%0Atermasuk%20%22brat%22%20%26%20fitur%20baru%20%22Live%20Notifications%20JKT48%22.%20Jawab%20santai%20%26%20siap%20bantu.&apiKey=vynzzdev0667`
     );
 
     // Kirimkan respons API eksternal ke klien
