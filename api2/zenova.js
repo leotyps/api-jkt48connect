@@ -1,7 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-const validateApiKey = require("../middleware/auth"); // Middleware for API key validation
+const validateApiKey = require("../middleware/auth"); // Middleware validasi API key
 const app = express();
 const router = express.Router();
 
@@ -12,64 +12,25 @@ app.use(
   })
 );
 
-// Endpoint to process text and optional base64-encoded image
+// Endpoint untuk mengambil respons dari API eksternal
 router.get("/", validateApiKey, async (req, res) => {
-  const text = req.query.text;
-  const base64Image = req.query.image; // Optional base64-encoded image
-
-  if (!text) {
-    return res.status(400).json({
-      success: false,
-      message: "The 'text' query parameter is required.",
-    });
-  }
+  const query = req.query.text || "hallo"; // Default query jika tidak ada input dari user
 
   try {
-    // Decode the base64 image if provided
-    let imageBuffer = null;
-    if (base64Image) {
-      const matches = base64Image.match(/^data:(.+);base64,(.+)$/);
-      if (!matches) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid base64 image format.",
-        });
-      }
-      const imageType = matches[1];
-      const imageData = matches[2];
-      imageBuffer = Buffer.from(imageData, "base64");
-    }
+    // Ambil data dari API eksternal
+    const response = await axios.get(
+      `https://api.yanzbotz.live/api/ai/gpt4?query=${encodeURIComponent(query)}&system=Namamu%20adalah%20Zenova%2C%20asisten%20di%20sini%20buat%20bantuin%20pengguna%20pake%20Zenova%20di%20WhatsApp.%20%0APenciptamu%20adalah%20JKT48Connect%20Corp%2C%20yang%20dibuat%20sama%20Valzyy.%20Zenova%20punya%20lebih%20dari%201000%20fitur%2C%20%0Ayang%20paling%20sering%20dipake%20itu%20%22brat%22%20sama%20fitur%20terbaru%20%22Live%20Notifications%20JKT48%22.%20%0AJawab%20dengan%20santai%2C%20jangan%20pake%20bahasa%20baku%2C%20dan%20selalu%20siap%20bantu%20pengguna.&apiKey=vynzzdev0667`
+    );
 
-    // Fetch data from the external API
-    const apiUrl = `https://api.siputzx.my.id/api/ai/llama33?prompt=Namamu%20Zenova%2C%20asisten%20buat%20bantu%20pengguna%20pake%20Zenova%20di%20WhatsApp.%20%0APenciptamu%20JKT48Connect%20Corp%2C%20dibuat%20sama%20Valzyy.%20Zenova%20punya%201000%2B%20fitur%2C%20%0Atermasuk%20%22brat%22%20%26%20fitur%20baru%20%22Live%20Notifications%20JKT48%22.%20Jawab%20santai%20%26%20siap%20bantu&text=${encodeURIComponent(
-      text
-    )}`;
-    const response = await axios.get(apiUrl);
-
-    // Process the response as needed
-    const apiData = response.data;
-
-    // Example: If the API returns an image URL and you want to fetch and send it
-    if (apiData.imageUrl) {
-      const imageResponse = await axios.get(apiData.imageUrl, {
-        responseType: "arraybuffer",
-      });
-      const contentType = imageResponse.headers["content-type"];
-      res.set("Content-Type", contentType);
-      return res.send(imageResponse.data);
-    }
-
-    // If no image is returned, send the API data as JSON
-    res.json({
-      success: true,
-      data: apiData,
-      imageBuffer: imageBuffer ? imageBuffer.toString("base64") : null,
-    });
+    // Kirimkan respons API eksternal ke klien
+    res.json(response.data);
   } catch (error) {
-    console.error(`Error processing request:`, error.message);
+    console.error(`Error fetching data for query ${query}:`, error.message);
+
+    // Mengembalikan error response jika terjadi kesalahan
     res.status(500).json({
       success: false,
-      message: "Failed to process the request.",
+      message: `Gagal mengambil data untuk query "${query}".`,
       error: error.message,
     });
   }
