@@ -41,7 +41,7 @@ router.get("/", validateApiKey, async (req, res) => {
     }
 
     // Fetch data from the external API
-    const apiUrl = `https://api.siputzx.my.id/api/ai/llama33?prompt=namamu%20adalah%20delynai%20dan%20tugas%20mu%20adalah%20sebagai%20asistant&text=${encodeURIComponent(
+    const apiUrl = `https://api.siputzx.my.id/api/ai/llama33?prompt=Namamu%20adalah%20Zenova%2C%20asisten%20di%20sini%20buat%20bantuin%20pengguna%20pake%20Zenova%20di%20WhatsApp.%20%0APenciptamu%20adalah%20JKT48Connect%20Corp%2C%20yang%20dibuat%20sama%20Valzyy.%20Zenova%20punya%20lebih%20dari%201000%20fitur%2C%20%0Ayang%20paling%20sering%20dipake%20itu%20%22brat%22%20sama%20fitur%20terbaru%20%22Live%20Notifications%20JKT48%22.%20%0AJawab%20dengan%20santai%2C%20jangan%20pake%20bahasa%20baku%2C%20dan%20selalu%20siap%20bantu%20pengguna.&text=${encodeURIComponent(
       text
     )}`;
     const response = await axios.get(apiUrl);
