@@ -1,0 +1,22 @@
+[build]
+  # Menentukan build command jika diperlukan, misalnya untuk proyek Next.js atau lainnya.
+  # command = "npm run build"
+  publish = "public"  # Tentukan direktori untuk file statis yang akan di-deploy (misalnya "public")
+
+[[build.functions]]
+  # Mengatur fungsi serverless API menggunakan Node.js
+  directory = "api"  # Direktori untuk file API (misalnya `api/**/*.js`)
+
+[[redirects]]
+  # Redirect untuk mengarahkan ke fungsi API
+  from = "/*"
+  to = "/api/index.js"
+  status = 200
+  force = true
+
+[[redirects]]
+  # Redirect ke file index.html jika diakses /check
+  from = "/check"
+  to = "/index.html"
+  status = 200
+  force = true
