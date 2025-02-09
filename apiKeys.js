@@ -22,7 +22,7 @@ const apiKeys = {
     lastAccessDate: "2024-11-20",
   },
   "J48-Rell": {
-    expiryDate: "unli",
+    expiryDate: parseCustomDate("21/11/2024/18:15"),
     remainingRequests: 250,
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
