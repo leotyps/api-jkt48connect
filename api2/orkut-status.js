@@ -1,7 +1,8 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-const validateApiKey = require("../middleware/auth"); // Middleware validasi API key
+const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
+
 const app = express();
 const router = express.Router();
 
@@ -10,11 +11,11 @@ app.use(cors({
   origin: "*", 
 }));
 
-// Endpoint untuk mengecek status pembayaran
+// Endpoint untuk mengecek status pembayaran dengan filter amount
 router.get("/", validateApiKey, async (req, res) => {
-  const { merchant, keyorkut, amount } = req.query; // Menangkap parameter dari query URL
+  const { merchant, keyorkut, amount } = req.query; // Ambil parameter dari query
 
-  // Validasi parameter wajib
+  // Validasi input query
   if (!merchant || !keyorkut) {
     return res.status(400).json({
       message: "Parameter 'merchant' dan 'keyorkut' harus disertakan.",
@@ -22,28 +23,24 @@ router.get("/", validateApiKey, async (req, res) => {
   }
 
   try {
-    // Meminta data dari API cek status pembayaran
+    // Meminta data dari API OkeConnect
     const response = await axios.get(`https://gateway.okeconnect.com/api/mutasi/qris/${merchant}/${keyorkut}`);
-    let statusData = response.data;
+    const statusData = response.data;
 
-    // Jika parameter `amount` diberikan, filter data yang sesuai
-    if (amount) {
-      const amountNumber = Number(amount);
-      if (isNaN(amountNumber) || amountNumber <= 0) {
-        return res.status(400).json({
-          message: "Parameter 'amount' harus berupa angka yang valid.",
-        });
-      }
-
-      statusData = statusData.filter(transaction => Number(transaction.amount) === amountNumber);
+    // Jika ada parameter 'amount', filter data berdasarkan jumlah tersebut
+    if (amount && !isNaN(amount)) {
+      const filteredData = statusData.data.filter(item => item.amount === amount);
+      return res.json({
+        status: "success",
+        data: filteredData
+      });
     }
 
-    // Mengembalikan data yang sudah difilter
+    // Jika tidak ada filter 'amount', kirim semua data
     res.json(statusData);
   } catch (error) {
     console.error("Error checking payment status:", error.message);
 
-    // Mengembalikan error response jika terjadi kesalahan
     res.status(500).json({
       message: "Gagal mengecek status pembayaran.",
       error: error.message,
