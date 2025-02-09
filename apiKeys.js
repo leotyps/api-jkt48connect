@@ -21,6 +21,12 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
+  "J48-Rell": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2024-11-20",
+  },
   "Rdzhooo": {
     expiryDate: "unli",
     remainingRequests: 250,
