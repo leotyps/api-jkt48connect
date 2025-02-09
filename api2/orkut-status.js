@@ -1,7 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-const validateApiKey = require("../middleware/auth"); // Import middleware validasi API key
+const validateApiKey = require("../middleware/auth"); // Middleware validasi API key
 const app = express();
 const router = express.Router();
 
@@ -12,9 +12,9 @@ app.use(cors({
 
 // Endpoint untuk mengecek status pembayaran
 router.get("/", validateApiKey, async (req, res) => {
-  const { merchant, keyorkut } = req.query; // Mendapatkan parameter merchant dan keyorkut dari query URL
+  const { merchant, keyorkut, amount } = req.query; // Menangkap parameter dari query URL
 
-  // Pastikan merchant dan keyorkut ada dalam query
+  // Validasi parameter wajib
   if (!merchant || !keyorkut) {
     return res.status(400).json({
       message: "Parameter 'merchant' dan 'keyorkut' harus disertakan.",
@@ -22,11 +22,23 @@ router.get("/", validateApiKey, async (req, res) => {
   }
 
   try {
-    // Meminta data dari API cek status menggunakan merchant dan keyorkut
+    // Meminta data dari API cek status pembayaran
     const response = await axios.get(`https://gateway.okeconnect.com/api/mutasi/qris/${merchant}/${keyorkut}`);
-    const statusData = response.data;
+    let statusData = response.data;
 
-    // Mengembalikan data dalam format JSON langsung
+    // Jika parameter `amount` diberikan, filter data yang sesuai
+    if (amount) {
+      const amountNumber = Number(amount);
+      if (isNaN(amountNumber) || amountNumber <= 0) {
+        return res.status(400).json({
+          message: "Parameter 'amount' harus berupa angka yang valid.",
+        });
+      }
+
+      statusData = statusData.filter(transaction => Number(transaction.amount) === amountNumber);
+    }
+
+    // Mengembalikan data yang sudah difilter
     res.json(statusData);
   } catch (error) {
     console.error("Error checking payment status:", error.message);
