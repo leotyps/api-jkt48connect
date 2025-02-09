@@ -29,10 +29,18 @@ router.get("/", validateApiKey, async (req, res) => {
 
     // Jika ada parameter 'amount', filter data berdasarkan jumlah tersebut
     if (amount && !isNaN(amount)) {
-      const filteredData = statusData.data.filter(item => item.amount === amount);
+      // Filter data berdasarkan 'amount' dan urutkan berdasarkan tanggal terbaru
+      const filteredData = statusData.data
+        .filter(item => item.amount === parseInt(amount)) // Filter berdasarkan jumlah
+        .sort((a, b) => new Date(b.date) - new Date(a.date)); // Urutkan berdasarkan tanggal terbaru
+
+      // Ambil data yang paling terbaru (paling atas setelah sorting)
+      const latestData = filteredData[0]; 
+
+      // Mengembalikan data terbaru yang ditemukan
       return res.json({
         status: "success",
-        data: filteredData
+        data: latestData
       });
     }
 
