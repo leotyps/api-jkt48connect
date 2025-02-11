@@ -1,20 +1,11 @@
 const express = require("express");
+const path = require("path");
 
 const router = express.Router();
 
-// Endpoint untuk welcome message
+// Endpoint untuk menampilkan file index.html dari root folder
 router.get("/", (req, res) => {
-  res.json({
-    success: true,
-    message: "Selamat datang di API JKT48Connect! Ini adalah source api untuk website www.jkt48connect.my.id",
-    owner: "Valzy",
-    developer: "Valzyy",
-    social_media: {
-      instagram: "@valzy._",
-      tiktok: "@valzyycans",
-      youtube: "@valzyofc"
-    },
-  });
+  res.sendFile(path.join(__dirname, "../index.html"));
 });
 
 module.exports = router;
