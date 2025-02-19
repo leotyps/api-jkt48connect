@@ -39,6 +39,12 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
+  "J48-ijull": {
+    expiryDate: "unli", // Tidak terbatas
+    remainingRequests: 250, // Tidak terbatas
+    maxRequests: 250, // Tidak terbatas
+    lastAccessDate: "2024-11-20",
+  },
   "fikzz111": {
     expiryDate: "unli",
     remainingRequests: 150,
