@@ -45,7 +45,7 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
-  "J48-Rell": {
+  "JC-U4P0FC": {
     expiryDate: parseCustomDate("30/4/2025/12:39"),
     remainingRequests: 250,
     maxRequests: 250,
