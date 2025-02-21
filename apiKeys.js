@@ -21,6 +21,12 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
+  "JC-SYF2AA": {
+    expiryDate: "unli",
+    remainingRequests: "∞", // Tidak terbatas
+    maxRequests: "∞", // Tidak terbatas
+    lastAccessDate: "2024-11-20",
+  },
   "J48-Fan": {
     expiryDate: "unli",
     remainingRequests: 250,
