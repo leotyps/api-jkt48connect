@@ -25,6 +25,7 @@ const tiktok = require("../api2/tiktok");
 const brat = require("../api2/brat");
 const allapi = require("../api2/all-apikeys");
 const zenova = require("../api2/zenova");
+const youtube = require("../api2/youtube");
 
 //Cors
 app.use(cors({
@@ -50,6 +51,7 @@ app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
 app.use("/api", allapi);
 app.use("/api", birthday);
+app.use("/api/youtube", youtube);
 app.use("/api/brat", brat);
 app.use("/api/zenova", zenova);
 app.use("/api/downloader/tiktok", tiktok);
