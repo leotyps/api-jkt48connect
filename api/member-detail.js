@@ -1,38 +1,50 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require('cors');
-const validateApiKey = require("../middleware/premium"); // Import middleware validasi API key
+const validateApiKey = require("../middleware/premium"); // Middleware validasi API key
 const app = express();
 const router = express.Router();
 
-
-// Enable CORS for all domains (or specific domains)
+// Enable CORS
 app.use(cors({
-  origin: '*', 
+  origin: '*',
 }));
 
-
-// Endpoint untuk mengambil data member berdasarkan nama
+// Endpoint untuk mencari data member berdasarkan nama
 router.get("/:name", validateApiKey, async (req, res) => {
   const { name } = req.params; // Mendapatkan nama dari parameter URL
 
   try {
-    // Meminta data dari API berdasarkan nama
-    const response = await axios.get(`https://api.crstlnz.my.id/api/member/${name}`);
-    const memberData = response.data;
+    // Ambil data semua member dari API JKT48Connect
+    const membersResponse = await axios.get("https://api.jkt48connect.my.id/api/member?api_key=JKTCONNECT");
+    const membersData = membersResponse.data;
 
-    // Mengembalikan data dalam bentuk JSON
-    res.json({
-      author: "Valzyy",
-      ...memberData,
-    });
+    // Cari member dengan nama lengkap yang sesuai (case-insensitive)
+    const foundMember = membersData.find(member => 
+      member.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (!foundMember) {
+      return res.status(404).json({
+        success: false,
+        message: `Member dengan nama "${name}" tidak ditemukan.`,
+      });
+    }
+
+    // Gunakan "url" dari hasil pencarian sebagai parameter pencarian detail di API crstlnz
+    const memberUrl = foundMember.url;
+    const response = await axios.get(`https://api.crstlnz.my.id/api/member/${memberUrl}`);
+    
+    // Kirim data JSON langsung tanpa tambahan atribut lain
+    res.json(response.data);
+    
   } catch (error) {
-    console.error(`Error fetching member detail with name ${name}:`, error.message);
+    console.error(`Error fetching member detail for ${name}:`, error.message);
 
     // Mengembalikan error response jika terjadi kesalahan
     res.status(500).json({
       success: false,
-      message: `Gagal mengambil data member dengan nama ${name}.`,
+      message: `Gagal mengambil data member dengan nama "${name}".`,
       error: error.message,
     });
   }
