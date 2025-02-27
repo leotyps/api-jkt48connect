@@ -16,7 +16,7 @@ router.get("/:name", validateApiKey, async (req, res) => {
 
   try {
     // Ambil data semua member dari API JKT48Connect
-    const membersResponse = await axios.get("https://api.jkt48connect.my.id/api/member?api_key=JKTCONNECT");
+    const membersResponse = await axios.get("https://api.crstlnz.my.id/api/member");
     const membersData = membersResponse.data;
 
     // Pastikan `membersData` adalah array sebelum melakukan pencarian
