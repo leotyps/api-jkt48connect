@@ -12,11 +12,11 @@ app.use(cors({
 
 // Endpoint untuk mencari data member berdasarkan nama atau nama panggilan
 router.get("/:name", validateApiKey, async (req, res) => {
-  const { name } = req.params; // Mendapatkan nama dari parameter URL
+  const { name } = req.params; // Nama yang dicari dari parameter URL
 
   try {
-    // Ambil data semua member dari API JKT48Connect
-    const membersResponse = await axios.get("https://api.crstlnz.my.id/api/member");
+    // Ambil daftar semua member JKT48
+    const membersResponse = await axios.get("https://api.crstlnz.my.id/api/member?group=jkt48");
     const membersData = membersResponse.data;
 
     // Pastikan `membersData` adalah array sebelum melakukan pencarian
@@ -27,10 +27,10 @@ router.get("/:name", validateApiKey, async (req, res) => {
       });
     }
 
-    // Cari member dengan nama lengkap atau nama panggilan (case-insensitive)
+    // Cari member berdasarkan nama lengkap atau nama panggilan (case-insensitive)
     const foundMember = membersData.find(member => 
       member.name.toLowerCase() === name.toLowerCase() || 
-      member.nickname.toLowerCase() === name.toLowerCase()
+      (member.nicknames && member.nicknames.some(nick => nick.toLowerCase() === name.toLowerCase()))
     );
 
     if (!foundMember) {
