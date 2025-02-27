@@ -10,7 +10,7 @@ app.use(cors({
   origin: '*',
 }));
 
-// Endpoint untuk mencari data member berdasarkan nama
+// Endpoint untuk mencari data member berdasarkan nama atau nama panggilan
 router.get("/:name", validateApiKey, async (req, res) => {
   const { name } = req.params; // Mendapatkan nama dari parameter URL
 
@@ -19,9 +19,18 @@ router.get("/:name", validateApiKey, async (req, res) => {
     const membersResponse = await axios.get("https://api.jkt48connect.my.id/api/member?api_key=JKTCONNECT");
     const membersData = membersResponse.data;
 
-    // Cari member dengan nama lengkap yang sesuai (case-insensitive)
+    // Pastikan `membersData` adalah array sebelum melakukan pencarian
+    if (!Array.isArray(membersData)) {
+      return res.status(500).json({
+        success: false,
+        message: "Data member tidak valid dari API.",
+      });
+    }
+
+    // Cari member dengan nama lengkap atau nama panggilan (case-insensitive)
     const foundMember = membersData.find(member => 
-      member.name.toLowerCase() === name.toLowerCase()
+      member.name.toLowerCase() === name.toLowerCase() || 
+      member.nickname.toLowerCase() === name.toLowerCase()
     );
 
     if (!foundMember) {
