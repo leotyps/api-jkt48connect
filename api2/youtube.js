@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(cors({ origin: "*" }));
 
 // API Key YouTube
-const YOUTUBE_API_KEY = "AIzaSyDTFlUj2mk7TOACeVzsrh8OssCI0ot9oFc";
+const YOUTUBE_API_KEY = "AIzaSyBCHgsvXcZKl_qS3-vMGpT1FRRib_xhXpQ";
 
 // ID channel YouTube JKT48
 const CHANNEL_IDS = [
