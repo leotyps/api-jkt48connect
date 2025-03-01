@@ -103,8 +103,8 @@ const apiKeys = {
   },
   "DP-YEON": {
     expiryDate: "unli",
-    remainingRequests: 50,
-    maxRequests: 50,
+    remainingRequests: 500,
+    maxRequests: 500,
     lastAccessDate: "2024-11-20",
     seller: true,
     premium: true,
