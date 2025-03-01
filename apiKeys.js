@@ -36,8 +36,8 @@ const apiKeys = {
   },
   "J48-Fan": {
     expiryDate: "unli",
-    remainingRequests: 250,
-    maxRequests: 250,
+    remainingRequests: "∞",
+    maxRequests: "∞",
     lastAccessDate: "2024-11-20",
   },
   "J48-Ken": {
