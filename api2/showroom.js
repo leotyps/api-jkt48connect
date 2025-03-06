@@ -87,23 +87,31 @@ router.get("/", validateApiKey, async (req, res) => {
     return res.status(500).json({ message: "Gagal mengambil data live Showroom." });
   }
 
-  const liveStreams = filterLiveStreams(streams).map((stream) => {
-    const displayName = stream.main_name.split(/\/|（/)[0].trim();
-    const replacedName = replaceName(displayName);
+  const seenIds = new Set(); // Variabel lokal untuk menyaring ID hanya selama request ini
 
-    return {
-      id: stream.live_id,
-      name: replacedName,
-      original_name: displayName,
-      followers: stream.follower_num,
-      start_live: parseDateTime(new Date().toISOString()),
-      image: stream.image,
-      image_square: stream.image_square,
-      showroom_url: `https://www.showroom-live.com/r/${stream.room_url_key}`,
-      watch_fullscreen: `https://dc.crstlnz.my.id/watch/${stream.room_url_key}`,
-      multi_stream: `https://dc.crstlnz.my.id/multi`,
-    };
-  });
+  const liveStreams = filterLiveStreams(streams)
+    .filter((stream) => {
+      if (seenIds.has(stream.live_id)) return false; // Jika ID sudah ada, skip
+      seenIds.add(stream.live_id); // Tambahkan ID ke set hanya selama request ini
+      return true;
+    })
+    .map((stream) => {
+      const displayName = stream.main_name.split(/\/|（/)[0].trim();
+      const replacedName = replaceName(displayName);
+
+      return {
+        id: stream.live_id,
+        name: replacedName,
+        original_name: displayName,
+        followers: stream.follower_num,
+        start_live: parseDateTime(new Date().toISOString()),
+        image: stream.image,
+        image_square: stream.image_square,
+        showroom_url: `https://www.showroom-live.com/r/${stream.room_url_key}`,
+        watch_fullscreen: `https://dc.crstlnz.my.id/watch/${stream.room_url_key}`,
+        multi_stream: `https://dc.crstlnz.my.id/multi`,
+      };
+    });
 
   res.json(liveStreams);
 });
