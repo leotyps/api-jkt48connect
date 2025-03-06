@@ -27,6 +27,7 @@ const allapi = require("../api2/all-apikeys");
 const zenova = require("../api2/zenova");
 const youtube = require("../api2/youtube");
 const idn = require("../api2/idn");
+const showroom = require("../api2/showroom");
 
 //Cors
 app.use(cors({
@@ -46,6 +47,7 @@ app.use("/api/member/", memberDetail);
 app.use("/api/member", member);
 app.use("/api/live", nowlive);
 app.use("/api/live/idn", idn);
+app.use("/api/live/showroom", showroom);
 app.use("/api/recent/", reLive);
 app.use("/api/recent", lastLive);
 app.use("/api/", mongodb);
