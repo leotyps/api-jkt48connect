@@ -28,6 +28,7 @@ const zenova = require("../api2/zenova");
 const youtube = require("../api2/youtube");
 const idn = require("../api2/idn");
 const showroom = require("../api2/showroom");
+const pinterest = require("../api2/pinterest");
 
 //Cors
 app.use(cors({
@@ -55,6 +56,7 @@ app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
 app.use("/api", allapi);
 app.use("/api", birthday);
+app.use("/api/pin", pinterest);
 app.use("/api/youtube", youtube);
 app.use("/api/brat", brat);
 app.use("/api/zenova", zenova);
