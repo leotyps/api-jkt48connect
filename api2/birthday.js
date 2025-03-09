@@ -20,10 +20,7 @@ router.get("/next-birthday", validateApiKey, async (req, res) => {
     const birthdayData = response.data;
 
     // Menambahkan author ke dalam respons
-    res.json({
-      author: "Valzyy",
-      ...birthdayData,
-    });
+    res.json(birthdayData);
   } catch (error) {
     console.error(`Error fetching next birthday data for group ${group}:`, error.message);
 
