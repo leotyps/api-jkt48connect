@@ -40,6 +40,7 @@ const apiKeys = {
     remainingRequests: 250,
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
+    premium: true,
   },
   "JC-SYF2AA": {
     expiryDate: "unli",
