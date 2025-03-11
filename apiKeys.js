@@ -20,6 +20,12 @@ const apiKeys = {
     remainingRequests: 250,
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
+  },
+  "sazxapi123": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2024-11-20",
     premium: true,
   },
   "J48-Kyy": {
