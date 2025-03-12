@@ -15,13 +15,13 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
-  "sazxbot352": {
+  "sazxbot3572": {
     expiryDate: "unli",
     remainingRequests: 250,
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
-  "sazxapi123": {
+  "sazxapi1723": {
     expiryDate: "unli",
     remainingRequests: 250,
     maxRequests: 250,
