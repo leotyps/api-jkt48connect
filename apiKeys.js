@@ -15,6 +15,12 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
+  "TanzManuel": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2024-11-20",
+  },
   "sazxbot352c": {
     expiryDate: "unli",
     remainingRequests: 250,
