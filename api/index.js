@@ -22,6 +22,7 @@ const orkutStatus = require("../api2/orkut-status");
 const birthday = require("../api2/birthday");
 const mongodb = require("../api2/mongodb");
 const tiktok = require("../api2/tiktok");
+const ytmp3 = require("../api2/ytmp3");
 const brat = require("../api2/brat");
 const allapi = require("../api2/all-apikeys");
 const zenova = require("../api2/zenova");
@@ -61,6 +62,7 @@ app.use("/api/youtube", youtube);
 app.use("/api/brat", brat);
 app.use("/api/zenova", zenova);
 app.use("/api/downloader/tiktok", tiktok);
+app.use("/api/downloader/ytmp3", ytmp3);
 app.use("/api/orkut/createpayment", createPayment);
 app.use("/api/orkut/cekstatus", orkutStatus);
 
