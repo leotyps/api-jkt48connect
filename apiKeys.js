@@ -114,7 +114,7 @@ const apiKeys = {
     maxRequests: 150,
     lastAccessDate: "2024-11-20",
   },
-  "MarshaLenathea123456789067": {
+  "marshalena": {
     expiryDate: "unli", // Tidak terbatas
     remainingRequests: 250, // Tidak terbatas
     maxRequests: 250, // Tidak terbatas
