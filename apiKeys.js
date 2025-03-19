@@ -47,6 +47,13 @@ const apiKeys = {
     lastAccessDate: "2024-11-20",
     premium: true,
   },
+  "azeexcuy": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2024-11-20",
+    premium: true,
+  },
   "J48-Mamia": {
     expiryDate: "unli",
     remainingRequests: 250,
