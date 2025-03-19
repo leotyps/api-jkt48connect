@@ -102,6 +102,12 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2024-11-20",
   },
+  "Rizz Bwot": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2024-11-20",
+  },
   "J48-ijull56": {
     expiryDate: "unli", // Tidak terbatas
     remainingRequests: 250, // Tidak terbatas
