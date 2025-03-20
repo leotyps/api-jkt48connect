@@ -31,6 +31,7 @@ const youtube = require("../api2/youtube");
 const idn = require("../api2/idn");
 const showroom = require("../api2/showroom");
 const pinterest = require("../api2/pinterest");
+const offair = require("../api2/event-offair");
 
 //Cors
 app.use(cors({
@@ -60,6 +61,7 @@ app.use("/api", allapi);
 app.use("/api", birthday);
 app.use("/api/pin", pinterest);
 app.use("/api/youtube", youtube);
+app.use("/api/offair", offair);
 app.use("/api/brat", brat);
 app.use("/api/zenova", zenova);
 app.use("/api/downloader/tiktok", tiktok);
