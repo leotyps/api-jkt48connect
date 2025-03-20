@@ -5,10 +5,9 @@ const validateApiKey = require("../middleware/auth"); // Import middleware valid
 const app = express();
 const router = express.Router();
 
-
 // Enable CORS for all domains (or specific domains)
 app.use(cors({
-  origin: '*', 
+  origin: '*',
 }));
 
 // Endpoint untuk mengambil data event
@@ -16,11 +15,8 @@ router.get("/", validateApiKey, async (req, res) => {
   try {
     const response = await axios.get("https://api.crstlnz.my.id/api/event");
 
-    // Mengembalikan data dalam bentuk JSON
-    res.json({
-      author: "Valzyy",
-      ...response.data,
-    });
+    // Mengembalikan data asli tanpa modifikasi
+    res.json(response.data);
   } catch (error) {
     console.error("Error fetching event data:", error.message);
 
