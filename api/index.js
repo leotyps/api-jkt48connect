@@ -61,7 +61,7 @@ app.use("/api", allapi);
 app.use("/api", birthday);
 app.use("/api/pin", pinterest);
 app.use("/api/youtube", youtube);
-app.use("/api/offair", offair);
+app.use("/api/events/other", offair);
 app.use("/api/brat", brat);
 app.use("/api/zenova", zenova);
 app.use("/api/downloader/tiktok", tiktok);
