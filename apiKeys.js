@@ -127,6 +127,7 @@ const apiKeys = {
     remainingRequests: 250, // Tidak terbatas
     maxRequests: 250, // Tidak terbatas
     lastAccessDate: "2024-11-20",
+    premium: true,
   },
   "fikzz11112": {
     expiryDate: "unli",
