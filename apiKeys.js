@@ -169,6 +169,13 @@ const apiKeys = {
     lastAccessDate: "2024-11-20",
     premium: true,
   },
+  "XIOVE": {
+    expiryDate: "unli",
+    remainingRequests: 150,
+    maxRequests: 150,
+    lastAccessDate: "2024-11-20",
+    premium: true,
+  },
   "ForxFyyre": {
     expiryDate: parseCustomDate("21/11/2024/18:15"),
     remainingRequests: "∞", // Tidak terbatas
