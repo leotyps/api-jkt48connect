@@ -1,5 +1,4 @@
 const apiKeys = require("../apiKeys");
-const parseCustomDate = require("../helpers/dateParser");
 
 function validateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
@@ -21,25 +20,13 @@ function validateApiKey(req, res, next) {
   }
 
   const now = new Date();
-  now.setHours(now.getHours() + 7); // Konversi waktu ke WIB (GMT+7)
 
-  // Periksa apakah API key sudah kedaluwarsa (kecuali jika "unli" atau "-")
-  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-") {
-    try {
-      const expiryDate = parseCustomDate(keyData.expiryDate);
-
-      if (now > expiryDate) {
-        return res.status(403).json({
-          success: false,
-          message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
-        });
-      }
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: `Terjadi kesalahan dalam parsing tanggal: ${error.message}`,
-      });
-    }
+  // Periksa apakah API key sudah kedaluwarsa (kecuali jika "unli")
+  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > new Date(keyData.expiryDate)) {
+    return res.status(403).json({
+      success: false,
+      message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
+    });
   }
 
   // Periksa limit request (∞ jika tak terbatas)
