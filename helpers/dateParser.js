@@ -1,27 +1,18 @@
 function parseCustomDate(dateString) {
+  // Jika tanggal adalah 'unli' atau '-'
   if (dateString === "unli" || dateString === "-") {
-    return dateString;
+    return dateString; // Kembalikan string "unli" atau "-" untuk menandakan tidak terbatas
   }
 
-  if (typeof dateString !== "string") {
-    throw new Error("Format tanggal tidak valid: Harus berupa string.");
-  }
+  // Jika formatnya adalah tanggal dan waktu
+  const [day, month, year, time] = dateString.split("/");
+  const [hour, minute] = time.split(":");
 
-  const parts = dateString.split("/");
-  if (parts.length !== 4) {
-    throw new Error("Format tanggal salah. Harus 'DD/MM/YYYY/HH:mm'.");
-  }
-
-  const [day, month, year, time] = parts;
-  const [hour, minute] = time.split(":").map(Number);
-
-  if (isNaN(day) || isNaN(month) || isNaN(year) || isNaN(hour) || isNaN(minute)) {
-    throw new Error("Tanggal mengandung karakter tidak valid.");
-  }
-
+  // Buat objek Date dalam UTC terlebih dahulu
   const date = new Date(Date.UTC(year, month - 1, day, hour, minute));
 
-  date.setHours(date.getHours() + 7); // Konversi ke WIB
+  // Konversi ke WIB (GMT+7)
+  date.setHours(date.getHours() + 7);
 
   return date;
 }
