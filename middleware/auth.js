@@ -1,9 +1,22 @@
 const apiKeys = require("../apiKeys");
 
 function parseCustomDate(dateString) {
+  if (typeof dateString !== "string") {
+    throw new Error("Format expiryDate tidak valid.");
+  }
+
   // Format: "DD/MM/YYYY/HH:mm"
-  const [day, month, year, time] = dateString.split("/");
+  const parts = dateString.split("/");
+  if (parts.length !== 4) {
+    throw new Error("Format tanggal tidak sesuai. Harus 'DD/MM/YYYY/HH:mm'.");
+  }
+
+  const [day, month, year, time] = parts;
   const [hours, minutes] = time.split(":").map(Number);
+
+  if (isNaN(day) || isNaN(month) || isNaN(year) || isNaN(hours) || isNaN(minutes)) {
+    throw new Error("Tanggal mengandung karakter tidak valid.");
+  }
 
   // Buat objek Date dalam zona waktu UTC
   const date = new Date(Date.UTC(year, month - 1, day, hours, minutes));
@@ -36,14 +49,21 @@ function validateApiKey(req, res, next) {
   const now = new Date();
   now.setHours(now.getHours() + 7); // Ubah waktu ke WIB
 
-  // Periksa apakah API key sudah kedaluwarsa (kecuali jika "unli")
+  // Periksa apakah API key sudah kedaluwarsa (kecuali jika "unli" atau "-")
   if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-") {
-    const expiryDate = parseCustomDate(keyData.expiryDate);
-    
-    if (now > expiryDate) {
-      return res.status(403).json({
+    try {
+      const expiryDate = parseCustomDate(keyData.expiryDate);
+
+      if (now > expiryDate) {
+        return res.status(403).json({
+          success: false,
+          message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
         success: false,
-        message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
+        message: `Terjadi kesalahan dalam parsing tanggal: ${error.message}`,
       });
     }
   }
