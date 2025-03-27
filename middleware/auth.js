@@ -1,31 +1,5 @@
 const apiKeys = require("../apiKeys");
-
-function parseCustomDate(dateString) {
-  if (typeof dateString !== "string") {
-    throw new Error("Format expiryDate tidak valid.");
-  }
-
-  // Format: "DD/MM/YYYY/HH:mm"
-  const parts = dateString.split("/");
-  if (parts.length !== 4) {
-    throw new Error("Format tanggal tidak sesuai. Harus 'DD/MM/YYYY/HH:mm'.");
-  }
-
-  const [day, month, year, time] = parts;
-  const [hours, minutes] = time.split(":").map(Number);
-
-  if (isNaN(day) || isNaN(month) || isNaN(year) || isNaN(hours) || isNaN(minutes)) {
-    throw new Error("Tanggal mengandung karakter tidak valid.");
-  }
-
-  // Buat objek Date dalam zona waktu UTC
-  const date = new Date(Date.UTC(year, month - 1, day, hours, minutes));
-
-  // Konversi ke WIB (GMT+7)
-  date.setHours(date.getHours() + 7);
-
-  return date;
-}
+const parseCustomDate = require("../helpers/dateParser");
 
 function validateApiKey(req, res, next) {
   const apiKey = req.headers["x-api-key"] || req.query.api_key;
@@ -47,7 +21,7 @@ function validateApiKey(req, res, next) {
   }
 
   const now = new Date();
-  now.setHours(now.getHours() + 7); // Ubah waktu ke WIB
+  now.setHours(now.getHours() + 7); // Konversi waktu ke WIB (GMT+7)
 
   // Periksa apakah API key sudah kedaluwarsa (kecuali jika "unli" atau "-")
   if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-") {
