@@ -143,7 +143,7 @@ const apiKeys = {
     premium: true,
   },
   "JKT-4F5C3D8A": {
-    expiryDate: parseCustomDate("27/03/2025/15:30"),
+    expiryDate: "27/03/2025/15:30",
     remainingRequests: 50,
     maxRequests: 50,
     lastAccessDate: "2024-11-20",
@@ -178,13 +178,13 @@ const apiKeys = {
     premium: true,
   },
   "ForxFyyre": {
-    expiryDate: parseCustomDate("21/11/2024/18:15"),
+    expiryDate: "21/11/2024/18:15",
     remainingRequests: "∞", // Tidak terbatas
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
   },
   "SAZX": {
-    expiryDate: parseCustomDate("31/12/2024/18:15"),
+    expiryDate: "31/12/2024/18:15",
     remainingRequests: "∞", // Tidak terbatas
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
