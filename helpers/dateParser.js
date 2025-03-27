@@ -21,7 +21,7 @@ function parseCustomDate(dateString) {
 
   const date = new Date(Date.UTC(year, month - 1, day, hour, minute));
 
-  date.setHours(date.getHours() + 7);
+  date.setHours(date.getHours() + 7); // Konversi ke WIB
 
   return date;
 }
