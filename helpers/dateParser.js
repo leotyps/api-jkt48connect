@@ -8,13 +8,8 @@ function parseCustomDate(dateString) {
   const [day, month, year, time] = dateString.split("/");
   const [hour, minute] = time.split(":");
 
-  // Buat objek Date dalam UTC terlebih dahulu
-  const date = new Date(Date.UTC(year, month - 1, day, hour, minute));
-
-  // Konversi ke WIB (GMT+7)
-  date.setHours(date.getHours() + 7);
-
-  return date;
+  // Buat objek Date berdasarkan komponen-komponen tersebut
+  return new Date(year, month - 1, day, hour, minute);
 }
 
 module.exports = parseCustomDate;
