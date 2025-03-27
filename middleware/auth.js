@@ -19,19 +19,23 @@ function validateApiKey(req, res, next) {
     });
   }
 
+  // Ambil waktu sekarang dalam UTC lalu konversi ke WIB (GMT+7)
   const now = new Date();
+  now.setHours(now.getHours() + 7);
 
-  // Periksa apakah API key sudah kedaluwarsa (kecuali jika "unli")
-  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-" && now > new Date(keyData.expiryDate)) {
-    return res.status(403).json({
-      success: false,
-      message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
-    });
+  // Periksa apakah API key sudah kedaluwarsa (kecuali jika "unli" atau "-")
+  if (keyData.expiryDate !== "unli" && keyData.expiryDate !== "-") {
+    if (now > new Date(keyData.expiryDate)) {
+      return res.status(403).json({
+        success: false,
+        message: "API key sudah kedaluwarsa. Silakan perpanjang API key Anda di WhatsApp 6285701479245 atau wa.me/6285701479245.",
+      });
+    }
   }
 
   // Periksa limit request (∞ jika tak terbatas)
   if (keyData.remainingRequests === "∞") {
-    return next(); // Lanjutkan jika limit tidak terbatas
+    return next();
   }
 
   // Validasi limit request
