@@ -178,7 +178,7 @@ const apiKeys = {
     premium: true,
   },
   "ForxFyyre": {
-    expiryDate: parseCustomDate("30/04/2025/12:39"),
+    expiryDate: parseCustomDate("27/03/2025/16:51"),
     remainingRequests: "∞", // Tidak terbatas
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
