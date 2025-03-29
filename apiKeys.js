@@ -3,8 +3,8 @@ const parseCustomDate = require("./helpers/dateParser");
 const apiKeys = {
   JKTCONNECT: {
     expiryDate: "unli", // Tidak terbatas
-    remainingRequests: "∞", // Tidak terbatas
-    maxRequests: "∞", // Tidak terbatas
+    remainingRequests: 1908239, // Tidak terbatas
+    maxRequests: 3898729, // Tidak terbatas
     lastAccessDate: "2024-11-20",
     seller: true,
     premium: true,
