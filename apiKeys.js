@@ -149,7 +149,7 @@ const apiKeys = {
     premium: true,
   },
   "JKT-4F5C3D8A": {
-    expiryDate: parseCustomDate("01/04/2025/00:00"),
+    expiryDate: parseCustomDate("06/04/2025/00:56"),
     remainingRequests: 50,
     maxRequests: 50,
     lastAccessDate: "2024-11-20",
