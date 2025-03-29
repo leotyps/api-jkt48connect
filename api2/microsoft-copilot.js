@@ -18,7 +18,16 @@ router.use(
 
 // Endpoint to get responses from the Copilot service
 router.get("/", validateApiKey, async (req, res) => {
-  const query = req.query.text || "Hello"; // Default query if none provided by user
+  const query = req.query.text;
+
+  // Check if query is empty or not provided
+  if (!query) {
+    return res.json({
+      success: true,
+      message: "No query provided",
+      result: "Please provide a query using the 'text' parameter to get a Copilot response."
+    });
+  }
 
   try {
     // Get response from Copilot service
@@ -27,7 +36,6 @@ router.get("/", validateApiKey, async (req, res) => {
     // Send successful response to client
     res.json({
       success: true,
-      message: "Copilot response generated successfully",
       result: response
     });
   } catch (error) {
@@ -44,7 +52,16 @@ router.get("/", validateApiKey, async (req, res) => {
 
 // POST endpoint alternative for longer queries or when GET is not appropriate
 router.post("/", validateApiKey, express.json(), async (req, res) => {
-  const query = req.body.text || "Hello"; // Get query from request body
+  const query = req.body.text;
+
+  // Check if query is empty or not provided
+  if (!query) {
+    return res.json({
+      success: true,
+      message: "No query provided",
+      result: "Please provide a query in the request body using the 'text' field to get a Copilot response."
+    });
+  }
 
   try {
     // Get response from Copilot service
@@ -53,7 +70,6 @@ router.post("/", validateApiKey, express.json(), async (req, res) => {
     // Send successful response to client
     res.json({
       success: true,
-      message: "Copilot response generated successfully",
       result: response
     });
   } catch (error) {
