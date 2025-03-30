@@ -193,7 +193,7 @@ const apiKeys = {
     expiryDate: parseCustomDate("31/12/2024/18:15"),
     remainingRequests: "∞", // Tidak terbatas
     maxRequests: "∞",,
-  "ZURACIZ": {
+    "ZURACIZ": {
     expiryDate: "unli",
     remainingRequests: 250,
     maxRequests: 250,
