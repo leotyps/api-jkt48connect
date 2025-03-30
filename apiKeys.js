@@ -235,6 +235,6 @@ const apiKeys = {
     lastAccessDate: "2025-03-30",
     premium: true,
     seller: true
-  },,
+  },
 };
 module.exports = apiKeys;
