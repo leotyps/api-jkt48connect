@@ -195,5 +195,13 @@ const apiKeys = {
     maxRequests: "∞",
     lastAccessDate: "2024-11-20",
   },
+,
+  "valzysigma": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2025-03-30",
+    premium: true
+  }
 };
 module.exports = apiKeys;
