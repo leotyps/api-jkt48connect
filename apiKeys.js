@@ -195,7 +195,6 @@ const apiKeys = {
     maxRequests: "∞",
     lastAccessDate: "2024-11-20",
   },
-,
   "valzysigma": {
     expiryDate: "unli",
     remainingRequests: 250,
