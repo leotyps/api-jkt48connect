@@ -245,5 +245,14 @@ const apiKeys = {
     premium: true,
     seller: true
   },
+
+  "JC-820BGLz": {
+    expiryDate: "unli",
+    remainingRequests: 10,
+    maxRequests: 250,
+    lastAccessDate: "2025-03-30",
+    premium: true,
+    seller: true
+  },
 };
 module.exports = apiKeys;
