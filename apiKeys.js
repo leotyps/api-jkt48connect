@@ -263,5 +263,12 @@ const apiKeys = {
     premium: true,
     seller: true
   },
+
+  "JC-OQ43NB": {
+    expiryDate: "unli",
+    remainingRequests: 30,
+    maxRequests: 30,
+    lastAccessDate: "2025-03-30"
+  },
 };
 module.exports = apiKeys;
