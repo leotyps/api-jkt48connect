@@ -201,8 +201,7 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2025-03-30",
     premium: true
-  }
-,
+  },
   "zurabotsigma": {
     expiryDate: "unli",
     remainingRequests: 250,
