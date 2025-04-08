@@ -284,5 +284,12 @@ const apiKeys = {
     maxRequests: 30,
     lastAccessDate: "2025-04-04"
   },
+
+  "JC-Y03Q3T": {
+    expiryDate: "unli",
+    remainingRequests: 30,
+    maxRequests: 30,
+    lastAccessDate: "2025-04-08"
+  },
 };
 module.exports = apiKeys;
