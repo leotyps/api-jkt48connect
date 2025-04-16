@@ -18,7 +18,7 @@ router.get("/", validateApiKey, async (req, res) => {
 
   try {
     // Ambil data gambar dari API eksternal
-    const response = await axios.get(`https://tiodevhost.eu.org/?q=${query}`, {
+    const response = await axios.get(`https://api.vtxgroup.my.id/api/v1/brat?text=${query}`, {
       responseType: "arraybuffer", // Mendapatkan data sebagai buffer
     });
 
