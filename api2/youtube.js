@@ -13,49 +13,50 @@ const YOUTUBE_API_KEY = "AIzaSyBCHgsvXcZKl_qS3-vMGpT1FRRib_xhXpQ";
 
 // ID channel YouTube JKT48
 const CHANNEL_IDS = [
-  "UCyam-qAWHwBoVnTNXk3gHbQ", // Channel utama JKT48
-  "UCIa2OxCyhjWjJke-9yYNbwA",
-  "UCnSv209ePY7gJRPJSBns4gw"// Channel Academy / Subsidiary
+  "UCaIbbu5Xg3DpHsn_3Zw2m9w", // Channel utama JKT48
+  "UCadv-UfEyjjwOPcZHc2QvIQ"  // Channel Academy / Subsidiary
 ];
 
-// Fungsi untuk mengambil live stream yang sedang berlangsung
-async function getLiveStream(channelId) {
+// Fungsi untuk mengambil video terbaru dari sebuah channel
+async function getLatestVideos(channelId) {
   try {
+    // Ambil daftar video terbaru dari channel
     const response = await axios.get(
-      `https://www.googleapis.com/youtube/v3/search`,
-      {
+      `https://www.googleapis.com/youtube/v3/search`, {
         params: {
           key: YOUTUBE_API_KEY,
-          channelId,
+          channelId: channelId,
           part: "snippet",
-          eventType: "live", // hanya yang sedang live
-          type: "video",
-          maxResults: 1
+          order: "date",
+          maxResults: 5
         }
       }
     );
 
-    if (!response.data.items.length) return null;
+    const videos = response.data.items.map(video => ({
+      videoId: video.id.videoId,
+      title: video.snippet.title,
+      thumbnail: video.snippet.thumbnails.high.url,
+      videoUrl: `https://www.youtube.com/watch?v=${video.id.videoId}`,
+      publishedAt: video.snippet.publishedAt,
+      channelId: video.snippet.channelId
+    }));
 
-    const video = response.data.items[0];
-    const videoId = video.id.videoId;
-
-    // Ambil detail statistik video (views)
-    const videoStats = await axios.get(
-      `https://www.googleapis.com/youtube/v3/videos`,
-      {
+    // Ambil detail video (views)
+    const videoIds = videos.map(v => v.videoId).join(",");
+    const videoDetails = await axios.get(
+      `https://www.googleapis.com/youtube/v3/videos`, {
         params: {
           key: YOUTUBE_API_KEY,
-          id: videoId,
+          id: videoIds,
           part: "statistics"
         }
       }
     );
 
-    // Ambil detail channel (nama dan foto profil)
+    // Ambil detail channel (nama & foto profil)
     const channelDetails = await axios.get(
-      `https://www.googleapis.com/youtube/v3/channels`,
-      {
+      `https://www.googleapis.com/youtube/v3/channels`, {
         params: {
           key: YOUTUBE_API_KEY,
           id: channelId,
@@ -65,36 +66,34 @@ async function getLiveStream(channelId) {
     );
 
     const channelInfo = channelDetails.data.items[0].snippet;
+    const channelName = channelInfo.title;
+    const channelImage = channelInfo.thumbnails.high.url;
 
-    return {
-      videoId,
-      title: video.snippet.title,
-      thumbnail: video.snippet.thumbnails.high.url,
-      videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
-      publishedAt: video.snippet.publishedAt,
-      views: videoStats.data.items[0]?.statistics?.viewCount || "0",
-      channelId: video.snippet.channelId,
-      channelName: channelInfo.title,
-      channelImage: channelInfo.thumbnails.high.url
-    };
-  } catch (err) {
-    console.error(`Error fetching live stream for channel ${channelId}:`, err.message);
-    return null;
+    // Gabungkan data video dengan views dan channel info
+    return videos.map((video, index) => ({
+      ...video,
+      views: videoDetails.data.items[index]?.statistics?.viewCount || "0",
+      channelName,
+      channelImage
+    }));
+  } catch (error) {
+    console.error(`Error fetching videos for channel ${channelId}:`, error.message);
+    return [];
   }
 }
 
-// Endpoint untuk mendapatkan data live streaming aktif dari JKT48
-router.get("/live", validateApiKey, async (req, res) => {
+// Endpoint untuk mendapatkan video terbaru dari 2 channel JKT48
+router.get("/", validateApiKey, async (req, res) => {
   try {
-    const livePromises = CHANNEL_IDS.map(id => getLiveStream(id));
-    const results = await Promise.all(livePromises);
+    const videoPromises = CHANNEL_IDS.map(id => getLatestVideos(id));
+    const results = await Promise.all(videoPromises);
 
-    // Filter hanya yang benar-benar sedang live
-    const liveStreams = results.filter(Boolean);
+    // Gabungkan semua video dari kedua channel dalam satu array
+    const allVideos = results.flat();
 
-    res.json(liveStreams);
+    res.json(allVideos);
   } catch (error) {
-    console.error("Error fetching live streams:", error.message);
+    console.error("Error fetching videos:", error.message);
     res.status(500).json([]);
   }
 });
