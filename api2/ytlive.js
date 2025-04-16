@@ -84,7 +84,7 @@ async function getLiveStream(channelId) {
 }
 
 // Endpoint untuk mendapatkan data live streaming aktif dari JKT48
-router.get("/live", validateApiKey, async (req, res) => {
+router.get("/", validateApiKey, async (req, res) => {
   try {
     const livePromises = CHANNEL_IDS.map(id => getLiveStream(id));
     const results = await Promise.all(livePromises);
