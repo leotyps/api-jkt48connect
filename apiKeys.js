@@ -368,5 +368,12 @@ const apiKeys = {
     maxRequests: 30,
     lastAccessDate: "2025-04-13"
   },
+
+  "JC-94HMF0": {
+    expiryDate: "unli",
+    remainingRequests: 30,
+    maxRequests: 30,
+    lastAccessDate: "2025-04-16"
+  },
 };
 module.exports = apiKeys;
