@@ -375,5 +375,12 @@ const apiKeys = {
     maxRequests: 30,
     lastAccessDate: "2025-04-16"
   },
+
+  "SSHJKS": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2025-04-17"
+  },
 };
 module.exports = apiKeys;
