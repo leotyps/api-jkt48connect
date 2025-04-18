@@ -459,26 +459,5 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2025-04-18"
   },
-
-  "DLC3ALD4": {
-    expiryDate: parseCustomDate(25/04/2025/07:33),
-    remainingRequests: 250,
-    maxRequests: 250,
-    lastAccessDate: "2025-04-18"
-  },
-
-  "HELNAHss": {
-    expiryDate: "unli",
-    remainingRequests: 250,
-    maxRequests: 250,
-    lastAccessDate: "2025-04-18"
-  },
-
-  "HELNAHsss": {
-    expiryDate: "unli",
-    remainingRequests: 250,
-    maxRequests: 250,
-    lastAccessDate: "2025-04-18"
-  },
 };
 module.exports = apiKeys;
