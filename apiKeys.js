@@ -452,5 +452,12 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2025-04-18"
   },
+
+  "DLILG3IM": {
+    expiryDate: "parseCustomDate("25/04/2025/07:20")",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2025-04-18"
+  },
 };
 module.exports = apiKeys;
