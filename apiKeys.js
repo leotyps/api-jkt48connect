@@ -454,7 +454,7 @@ const apiKeys = {
   },
 
   "DLILG3IM": {
-    expiryDate: "parseCustomDate("25/04/2025/07:20")",
+    expiryDate: parseCustomDate("25/04/2025/07:20")",
     remainingRequests: 250,
     maxRequests: 250,
     lastAccessDate: "2025-04-18"
