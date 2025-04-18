@@ -431,5 +431,12 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2025-04-18"
   },
+
+  "DL943621": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2025-04-18"
+  },
 };
 module.exports = apiKeys;
