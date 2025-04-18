@@ -474,5 +474,12 @@ const apiKeys = {
     maxRequests: 250,
     lastAccessDate: "2025-04-18"
   },
+
+  "DL5J7MNQ": {
+    expiryDate: parseCustomDate("25/04/2025/08:19"),
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2025-04-18"
+  },
 };
 module.exports = apiKeys;
