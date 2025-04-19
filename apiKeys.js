@@ -495,5 +495,12 @@ const apiKeys = {
     maxRequests: 30,
     lastAccessDate: "2025-04-19"
   },
+
+  "HELNJs": {
+    expiryDate: "unli",
+    remainingRequests: 250,
+    maxRequests: 250,
+    lastAccessDate: "2025-04-19"
+  },
 };
 module.exports = apiKeys;
