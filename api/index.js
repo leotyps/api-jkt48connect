@@ -34,6 +34,7 @@ const idn = require("../api2/idn");
 const showroom = require("../api2/showroom");
 const pinterest = require("../api2/pinterest");
 const offair = require("../api2/event-offair");
+const getuser = require("../api2/get-user");
 
 //Cors
 app.use(cors({
@@ -62,6 +63,7 @@ app.use("/api", checkApikey);
 app.use("/api", allapi);
 app.use("/api", birthday);
 app.use("/api/pin", pinterest);
+app.use("/api/auth/get-user", getuser);
 app.use("/api/youtube", youtube);
 app.use("/api/ytlive", ytlive);
 app.use("/api/events/other", offair);
