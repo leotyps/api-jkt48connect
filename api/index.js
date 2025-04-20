@@ -35,6 +35,7 @@ const showroom = require("../api2/showroom");
 const pinterest = require("../api2/pinterest");
 const offair = require("../api2/event-offair");
 const getuser = require("../api2/get-user");
+const editapikey = require("../api2/edit-github-apikey");
 
 //Cors
 app.use(cors({
@@ -60,6 +61,7 @@ app.use("/api/recent", lastLive);
 app.use("/api/", mongodb);
 app.use("/", otherEndpoint);
 app.use("/api", checkApikey);
+app.use("/api/auth/edit-github-apikey", editapikey);
 app.use("/api", allapi);
 app.use("/api", birthday);
 app.use("/api/pin", pinterest);
