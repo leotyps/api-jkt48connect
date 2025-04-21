@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
   const { team_id, amount, phone_number } = req.query;
 
   // Validasi input
-  if (!team_id || !amount) {
+  if (!amount) {
     return res.status(400).json({
       message: "Parameter 'team_id' dan 'amount' wajib diisi.",
     });
