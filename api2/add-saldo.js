@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
   try {
     let url = `https://backend.jkt48connect.my.id/api/auth/add-saldo?team_id=${team_id}&amount=${amount}`;
     if (phone_number) {
-      url += `&phone_number=${phone_number}`;
+      url = `https://backend.jkt48connect.my.id/api/auth/add-saldo?phone_number=${phone_number}&amount=${amount}`;
     }
 
     const response = await axios.get(url);
