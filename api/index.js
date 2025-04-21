@@ -36,6 +36,7 @@ const pinterest = require("../api2/pinterest");
 const offair = require("../api2/event-offair");
 const getuser = require("../api2/get-user");
 const editapikey = require("../api2/edit-github-apikey");
+const addsaldo = require("../api2/add-saldo");
 
 //Cors
 app.use(cors({
@@ -66,6 +67,7 @@ app.use("/api", allapi);
 app.use("/api", birthday);
 app.use("/api/pin", pinterest);
 app.use("/api/auth/get-user", getuser);
+app.use("/api/auth/add-saldo", addsaldo);
 app.use("/api/youtube", youtube);
 app.use("/api/ytlive", ytlive);
 app.use("/api/events/other", offair);
