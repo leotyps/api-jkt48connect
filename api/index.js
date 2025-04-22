@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require('cors');
+const serverless = require('serverless-http')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -82,11 +83,6 @@ app.use("/api/orkut/cekstatus", orkutStatus);
 
  
 // Menjalankan server
-app.listen(PORT, () => {
-  console.log(`Server berjalan di http://localhost:${PORT}`);
-});
-
-const serverless = require('serverless-http')
-
-module.exports.handler = serverless(app)
+module.exports = app;
+module.exports.handler = serverless(app);
 
