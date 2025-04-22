@@ -1,13 +1,16 @@
 [build]
-  publish = "public" # Ganti ini sesuai folder tempat .html kamu disimpan
-  functions = "netlify/functions" # Ganti sesuai lokasi file function-mu
+  command = "npm run build"
+  publish = "public"
+
+[functions]
+  directory = "api"
 
 [[redirects]]
-  from = "/check"
-  to = "/index.html"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
 
 [[redirects]]
   from = "/*"
-  to = "/api/index.js"
+  to = "/.netlify/functions/index"
   status = 200
