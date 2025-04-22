@@ -35,10 +35,12 @@
     "crypto": "^1.0.1",
     "qrcode": "^1.5.4",
     "random-user": "^2.0.2",
+    "serverless-http": "^3.2.0",
     "saweria": "^2.0.1",
     "ws": "^8.13.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "nodemon": "^3.0.0",
+    "netlify-cli": "^15.0.0"
   }
 }
