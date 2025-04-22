@@ -1,20 +1,13 @@
 [build]
-  # Tentukan direktori tempat file statis akan disimpan
-  publish = "public"  # Ganti dengan nama folder tempat file HTML disimpan
-
-[functions]
-  directory = "api"  # Folder tempat fungsi serverless (API) Anda disimpan
+  publish = "public" # Ganti ini sesuai folder tempat .html kamu disimpan
+  functions = "netlify/functions" # Ganti sesuai lokasi file function-mu
 
 [[redirects]]
-  # Redirect semua permintaan ke API (index.js di dalam folder api)
-  from = "/*"
-  to = "/api/index.js"
-  status = 200
-  force = true
-
-[[redirects]]
-  # Redirect /check ke file index.html
   from = "/check"
   to = "/index.html"
   status = 200
-  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/api/index.js"
+  status = 200
