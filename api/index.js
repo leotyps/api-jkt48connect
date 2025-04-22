@@ -85,3 +85,8 @@ app.use("/api/orkut/cekstatus", orkutStatus);
 app.listen(PORT, () => {
   console.log(`Server berjalan di http://localhost:${PORT}`);
 });
+
+const serverless = require('serverless-http')
+
+module.exports.handler = serverless(app)
+
