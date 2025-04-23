@@ -596,8 +596,8 @@ const apiKeys = {
 
   "ricky": {
     expiryDate: "unli",
-    remainingRequests: 250,
-    maxRequests: 250,
+    remainingRequests: "∞",
+    maxRequests: "∞",
     lastAccessDate: "2025-04-22",
     premium: true
   },
