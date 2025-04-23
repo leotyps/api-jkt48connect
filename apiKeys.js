@@ -598,7 +598,8 @@ const apiKeys = {
     expiryDate: "unli",
     remainingRequests: 250,
     maxRequests: 250,
-    lastAccessDate: "2025-04-22"
+    lastAccessDate: "2025-04-22",
+    premium: true
   },
 
   "JC-M549QF": {
