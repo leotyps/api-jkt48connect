@@ -24,10 +24,8 @@ router.get("/", validateApiKey, async (req, res) => {
     const activeMembers = members.filter((member) => member.is_graduate === false);
 
     // Mengembalikan data yang difilter dalam bentuk JSON
-    res.json({
-      author: "Valzyy",
-      ...activeMembers,
-    });
+   res.json(activeMembers);
+    
   } catch (error) {
     console.error(`Error fetching members for group ${group}:`, error.message);
 
