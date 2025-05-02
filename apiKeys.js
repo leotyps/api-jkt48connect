@@ -637,7 +637,7 @@ const apiKeys = {
     lastAccessDate: "2025-05-02"
   },
 
-  "CL747946": {
+  "berita48": {
     expiryDate: "unli",
     remainingRequests: 250,
     maxRequests: 250,
