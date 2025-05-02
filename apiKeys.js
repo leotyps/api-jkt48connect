@@ -641,7 +641,8 @@ const apiKeys = {
     expiryDate: "unli",
     remainingRequests: 250,
     maxRequests: 250,
-    lastAccessDate: "2025-05-02"
+    lastAccessDate: "2025-05-02",
+    premium: true
   },
 };
 module.exports = apiKeys;
