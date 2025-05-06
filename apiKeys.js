@@ -639,8 +639,8 @@ const apiKeys = {
 
   "berita48": {
     expiryDate: "unli",
-    remainingRequests: 250,
-    maxRequests: 250,
+    remainingRequests: "∞", // Tidak terbatas
+    maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2025-05-02",
     premium: true
   },
