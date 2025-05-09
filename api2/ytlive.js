@@ -95,7 +95,7 @@ router.get("/", validateApiKey, async (req, res) => {
     res.json(liveStreams);
   } catch (error) {
     console.error("Error fetching live streams:", error.message);
-    res.status(500).json([]);
+    res.status(500).json([error]);
   }
 });
 
