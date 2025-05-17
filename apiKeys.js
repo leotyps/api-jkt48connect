@@ -94,6 +94,13 @@ const apiKeys = {
     lastAccessDate: "2024-11-20",
     premium: true,
   },
+  "ApiBot": {
+    expiryDate: "unli",
+    remainingRequests: "∞", // Tidak terbatas
+    maxRequests: "∞", // Tidak terbatas
+    lastAccessDate: "2024-11-20",
+    premium: true,
+  },
   "J48-Fans": {
     expiryDate: "unli",
     remainingRequests: "∞",
