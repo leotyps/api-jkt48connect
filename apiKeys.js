@@ -80,6 +80,13 @@ const apiKeys = {
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
   },
+  "manuel": {
+    expiryDate: "unli",
+    remainingRequests: "∞", // Tidak terbatas
+    maxRequests: "∞", // Tidak terbatas
+    lastAccessDate: "2024-11-20",
+    premium: true,
+  },
   "J48-Fans": {
     expiryDate: "unli",
     remainingRequests: "∞",
