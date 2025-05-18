@@ -79,6 +79,7 @@ const apiKeys = {
     remainingRequests: "∞", // Tidak terbatas
     maxRequests: "∞", // Tidak terbatas
     lastAccessDate: "2024-11-20",
+    premium: true
   },
   "manuel": {
     expiryDate: "unli",
