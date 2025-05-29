@@ -666,5 +666,12 @@ const apiKeys = {
     lastAccessDate: "2025-05-02",
     premium: true
   },
+  "48-NEPHYY": {
+    expiryDate: "unli",
+    remainingRequests: "∞", // Tidak terbatas
+    maxRequests: "∞", // Tidak terbatas
+    lastAccessDate: "2024-11-20",
+    premium: true,
+  },
 };
 module.exports = apiKeys;
